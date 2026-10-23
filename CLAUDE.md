@@ -1,0 +1,1 @@
+Read docs/PROJECT_NOTES.md before changing anything. Edit src/, run python tools/build.py, never hand-edit index.html or host.html. Keep the notes file updated when rules or decisions change. Never commit intranet paths, colleague names, or the Supabase secret key.

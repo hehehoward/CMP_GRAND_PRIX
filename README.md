@@ -6,6 +6,8 @@ A 20-minute DOE game for the CMP AI workshop. Players tune a car on their phone;
 - Host: https://hehehoward.github.io/CMP_GRAND_PRIX/host.html
 - Rehearsal: add `?e=TEST1` to both links to keep data separate.
 
+Full details (rules, data format, decisions): [docs/PROJECT_NOTES.md](docs/PROJECT_NOTES.md)
+
 ## Folders
 - `src/` source (garage = player page, racecontrol = host page, sim = race engine, cloud = Supabase sync)
 - `vendor/` three.js r149, qrcode-generator 1.4.4
