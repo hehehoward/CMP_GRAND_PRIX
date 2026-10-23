@@ -604,7 +604,7 @@ svg text{font-family:var(--sans)}
     <p>你是這台賽車的工程師。燃油與進站由車隊自動處理，你只要專心把車調快、調穩。</p>
     <div class="steps"><div><i>1</i><b>設計</b><span>調整 5 個設定，每個都有好處與代價</span></div><div><i>2</i><b>測試</b><span>上賽道跑一圈，測試花的是真實時間</span></div><div><i>3</i><b>提交</b><span>主持人喊停前，提交決賽設定參加 12 圈大獎賽</span></div></div>
     <div class="fld"><label>姓名（會顯示在大螢幕）</label><input id="inName" maxlength="16" placeholder="例如：王小明"></div>
-    <div class="fld"><label>工號</label><input id="inId" maxlength="12" placeholder="例如：120345"></div>
+    <div class="fld" id="idFld"><label>工號</label><input id="inId" maxlength="12" placeholder="例如：120345"></div>
     <button class="go" id="startBtn">進入車庫 →</button>
   </div>
 </div>
@@ -2029,6 +2029,8 @@ var CLOUD = (function () {
 var KEY='cmpgp_garage_v5', TSC={practice:5.3,hot:5.5,wet:7.4}, AI_SECONDS=10, T=SIM.TRACK;
 var st=load()||{name:'',id:'',runs:[],params:SIM.sanitize(SIM.DEFAULT),final:null,aiLog:[],aiUsed:0,trackSec:0};
 var $=function(i){return document.getElementById(i)};
+var NOID=true;/* build sets true for the public (GitHub) copy: players enter a name only */
+if(NOID){var _f=document.getElementById('idFld');if(_f)_f.style.display='none'}
 var busy=false, sel=null, dirHandle=null, folderState='none', LASTERR='', CMODE=false;/* CMODE: cloud reachable → save there, no folder needed */
 function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
 function load(){try{var s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
@@ -2165,6 +2167,7 @@ function showWelcome(){$('welcome').style.display='flex';$('inName').value=st.na
 $('startBtn').onclick=async function(){
   var n=$('inName').value.trim(),i=$('inId').value.trim();
   if(!n){$('inName').focus();toast('請輸入姓名');return}
+  if(NOID)i=st.id||('P'+Date.now().toString(36).slice(-4)+Math.random().toString(36).slice(2,6)).toUpperCase();/* name-only version: hidden random player code */
   if(!i){$('inId').focus();toast('請輸入工號');return}
   st.name=n;st.id=i;save();
   $('welcome').style.display='none';renderAll();
@@ -2817,7 +2820,7 @@ function evHTML(r){
 
 /* ---------------- right column ---------------- */
 function renderHeader(){
-  $('who').innerHTML=st.id?'<b>'+esc(st.name)+'</b> · '+esc(st.id):'';$('carName').textContent='CMP-'+(st.id||'26');
+  $('who').innerHTML=st.id?'<b>'+esc(st.name)+'</b>'+(NOID?'':' · '+esc(st.id)):'';$('carName').textContent=NOID?'CMP · '+(st.name||'26'):'CMP-'+(st.id||'26');
   $('nTests').textContent=st.runs.length;$('tTime').textContent=mmss(st.trackSec||0);
 }
 var Q12={};

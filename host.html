@@ -557,7 +557,7 @@ body.host .hbtn{border-color:rgba(10,132,255,.6);color:#9fd0ff;background:rgba(1
           <div class="qrbox"><div id="qrJoin"></div><div class="qrurl num" id="qrUrl"></div></div>
           <div class="join">
             <div class="ixc"><div class="n">1</div><h4>用手機掃描 QR code</h4><p>用自己的行動網路也可以，不用安裝 App</p></div>
-            <div class="ixc"><div class="n">2</div><h4>輸入名字和工號</h4><p>名字會顯示在大螢幕排行榜上</p></div>
+            <div class="ixc"><div class="n">2</div><h4>輸入你的名字</h4><p>名字會顯示在大螢幕排行榜上</p></div>
             <div class="ixc"><div class="n">3</div><h4>開始調校你的賽車</h4><p>每跑完一圈自動上傳，不用存檔</p></div>
           </div>
         </div>
@@ -4457,6 +4457,7 @@ var CLOUD = (function () {
 <script>
 (function(){
 var $=function(i){return document.getElementById(i)};
+function sid(id){return /^P[0-9A-Z]{8}$/.test(String(id))?'':id}/* hide auto codes from the name-only version */
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function toast(m){var t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2600)}
 function ft(t,d){if(t==null||!isFinite(t))return '—';d=d==null?3:d;var m=Math.floor(t/60),s=t-m*60;return m+':'+(s<10?'0':'')+s.toFixed(d)}
@@ -4578,7 +4579,7 @@ function renderLive(){
     .map(function(t){return '<div class="glass tile"><div class="k">'+t[0]+'</div><div class="v num">'+t[1]+'</div><div class="s">'+(t[2]||'&nbsp;')+'</div></div>'}).join('');
   var top=all.slice(0,12),lead=top[0],rk={};all.forEach(function(x,i){rk[x.e.id]=i});
   $('lb').innerHTML=top.map(function(x,i){var e=x.e,fl=lastLeader[e.id]!=null&&x.b<lastLeader[e.id]-1e-6,pr=lastRank[e.id],mv=pr==null?'<span class="mv nw">NEW</span>':pr>i?'<span class="mv up">▲'+(pr-i)+'</span>':'';
-    return '<div class="lbr'+(i===0?' first':'')+(fl?' flash':'')+'"><span class="p num">'+(i<3?['🥇','🥈','🥉'][i]:(i+1))+'</span><span class="nm">'+esc(e.name)+'<small>'+esc(e.id)+'</small>'+(feedBoot?'':mv)+'</span><span class="t num">'+ft(x.b)+'</span><span class="g num">'+(i?'+'+(x.b-lead.b).toFixed(3):'')+'</span><span class="r">'+e.runs.length+' 次</span><span>'+(e.final?'<span class="tag ok">✓</span>':'')+'</span></div>'}).join('')||'<div class="lobby"><div class="lt">🏎️ 準備進入車庫</div><div class="ls3"><div><i>1</i>打開共享資料夾</div><div><i>2</i>用 <b>Chrome</b> 或 <b>Edge</b> 開啟<br><b class="num">CMP_GP_Garage.html</b></div><div><i>3</i>輸入姓名與工號<br>開始調校你的賽車</div></div><div class="lw">'+(P.length?'已有 <b>'+P.length+'</b> 位玩家進入車庫，等待第一圈完成…':'等待玩家加入…')+'</div></div>';
+    return '<div class="lbr'+(i===0?' first':'')+(fl?' flash':'')+'"><span class="p num">'+(i<3?['🥇','🥈','🥉'][i]:(i+1))+'</span><span class="nm">'+esc(e.name)+'<small>'+esc(sid(e.id))+'</small>'+(feedBoot?'':mv)+'</span><span class="t num">'+ft(x.b)+'</span><span class="g num">'+(i?'+'+(x.b-lead.b).toFixed(3):'')+'</span><span class="r">'+e.runs.length+' 次</span><span>'+(e.final?'<span class="tag ok">✓</span>':'')+'</span></div>'}).join('')||'<div class="lobby"><div class="lt">🏎️ 準備進入車庫</div><div class="ls3"><div><i>1</i>打開共享資料夾</div><div><i>2</i>用 <b>Chrome</b> 或 <b>Edge</b> 開啟<br><b class="num">CMP_GP_Garage.html</b></div><div><i>3</i>輸入姓名與工號<br>開始調校你的賽車</div></div><div class="lw">'+(P.length?'已有 <b>'+P.length+'</b> 位玩家進入車庫，等待第一圈完成…':'等待玩家加入…')+'</div></div>';
   if(!feedBoot){
     if(lead&&lastTop&&lead.e.id!==lastTop)feedAdd('🏆 <b>'+esc(lead.e.name)+'</b> 登上榜首 · '+ft(lead.b),'#ffd60a');
     else top.slice(0,12).forEach(function(x,i){var o=lastLeader[x.e.id];if(o!=null&&x.b<o-1e-6&&i>0&&i<12)feedAdd('🟣 <b>'+esc(x.e.name)+'</b> 刷新個人最佳 '+ft(x.b)+' · 第 '+(i+1)+' 名','#bf5af2')});
@@ -4678,7 +4679,7 @@ function renderQuali(){
   var Q=qualTable();if(!S.selected.length&&Q.length)autoSelect();$('nSel').textContent=S.selected.length;
   $('qRows').innerHTML=Q.map(function(x){var k=x.e.id,on=S.selected.indexOf(k)>=0,why=on?(S.wildcard[k]?'<span class="tag wc">'+esc(S.wildcard[k])+'</span>':'<span class="tag top">前 20 名</span>'):'';
     if(x.e.valid===false)why+='<span class="tag bad">檔案遭修改</span>';if(x.e.stats.aiAdopted)why+='<span class="tag ai">AI 設定</span>';
-    return '<tr style="'+(on?'background:rgba(48,209,88,.05)':'')+'"><td><input type="checkbox" data-k="'+esc(k)+'" '+(on?'checked':'')+'></td><td class="num">'+x.pos+'</td><td><b>'+esc(x.e.name)+'</b> <span style="color:var(--dim);font-size:12px">'+esc(x.e.id)+'</span></td><td class="num" style="font-size:13px">'+SIM.code(x.e.final.params)+'</td><td class="num">'+(x.q.finished?ft(x.q.total,2):'<span style="color:var(--red)">DNF（'+REASON[x.q.dnf.reason]+'）</span>')+'</td><td class="num">'+(x.e.stats.runs!=null?x.e.stats.runs:'—')+'</td><td>'+why+'</td></tr>'}).join('')||'<tr><td colspan="7" style="color:var(--dim);text-align:center;padding:40px">尚無玩家提交決賽設定</td></tr>';
+    return '<tr style="'+(on?'background:rgba(48,209,88,.05)':'')+'"><td><input type="checkbox" data-k="'+esc(k)+'" '+(on?'checked':'')+'></td><td class="num">'+x.pos+'</td><td><b>'+esc(x.e.name)+'</b> <span style="color:var(--dim);font-size:12px">'+esc(sid(x.e.id))+'</span></td><td class="num" style="font-size:13px">'+SIM.code(x.e.final.params)+'</td><td class="num">'+(x.q.finished?ft(x.q.total,2):'<span style="color:var(--red)">DNF（'+REASON[x.q.dnf.reason]+'）</span>')+'</td><td class="num">'+(x.e.stats.runs!=null?x.e.stats.runs:'—')+'</td><td>'+why+'</td></tr>'}).join('')||'<tr><td colspan="7" style="color:var(--dim);text-align:center;padding:40px">尚無玩家提交決賽設定</td></tr>';
   var nf=players().filter(function(e){return !e.final});$('noFinal').textContent=nf.length?'未提交決賽設定（'+nf.length+'）：'+nf.slice(0,30).map(function(e){return e.name}).join('、')+(nf.length>30?'…':''):'';
   $('qRows').querySelectorAll('input').forEach(function(cb){cb.onchange=function(){var k=cb.dataset.k,i=S.selected.indexOf(k);
     if(cb.checked&&i<0){if(S.selected.length>=NFIN){cb.checked=false;toast('最多 '+NFIN+' 台車');return}S.selected.push(k);S.wildcard[k]='主持人指定'}
@@ -4917,7 +4918,7 @@ function stopPodium(){if(POD){if(POD.c)POD.c.stop();clearTimeout(POD.t1);POD=nul
 function startPodium(){
   stopPodium();var D=podiumData(),cols=['#ffd60a','#d8dde6','#e0a060'],rev=[3.2,1.6,0.6],fired=false;
   $('podSub').textContent=D.length?RACE.cond.icon+' '+RACE.cond.name+' · '+SIM.LAPS+' 圈 · '+RACE.cars.length+' 位決賽車手':'尚無決賽成績，請先選擇決賽名單並完成正賽。';
-  $('podLbl').innerHTML=D.map(function(d,i){return '<div class="plbl p'+(i+1)+'" id="pl'+i+'" style="--c:'+cols[i]+'"><div class="pp">P'+(i+1)+(i===0?' · 冠軍':i===1?' · 亞軍':' · 季軍')+'</div><div class="nm">'+esc(d.name)+'</div><div class="id">'+esc(d.id)+(d.ai?' · 採用 AI 設定':'')+'</div><div class="tm num">'+d.time+'</div><div class="cd num">'+d.code+' · '+d.tire+'</div></div>'}).join('');
+  $('podLbl').innerHTML=D.map(function(d,i){return '<div class="plbl p'+(i+1)+'" id="pl'+i+'" style="--c:'+cols[i]+'"><div class="pp">P'+(i+1)+(i===0?' · 冠軍':i===1?' · 亞軍':' · 季軍')+'</div><div class="nm">'+esc(d.name)+'</div><div class="id">'+esc(sid(d.id))+(d.ai?' · 採用 AI 設定':'')+'</div><div class="tm num">'+d.time+'</div><div class="cd num">'+d.code+' · '+d.tire+'</div></div>'}).join('');
   if(!D.length)return;
   POD={};
   function reveal(T){D.forEach(function(d,i){var el=$('pl'+i);if(el&&T>=rev[i]&&!el.classList.contains('on')){el.classList.add('on');SFX.alert('reveal');if(i>0)SFX.applause(2.2,26);if(i===0&&!fired){fired=true;RFX.confetti('podFx');SFX.fanfare();SFX.cheer(0.9,5);SFX.applause(5,40)}}})}
@@ -4937,7 +4938,7 @@ function roomResults(){var c=raceCond(),R=qualTable().map(function(x){var r=race
 function renderResults(){
   if(!S.selected.length){$('podium').innerHTML='<div style="color:var(--dim)">請先完成正賽</div>';return}
   if(!RACE)buildRace();var fo=standings(RACE.endT),winT=fo[0].k.finishT;
-  $('podium').innerHTML=[[1,'var(--silver)',150],[0,'var(--gold)',200],[2,'var(--bronze)',115]].map(function(p){var o=fo[p[0]];if(!o)return '';return '<div class="pod"><div class="nm">'+esc(o.k.e.name)+'</div><div class="mem">'+esc(o.k.e.id)+'</div><div class="blk num" style="height:'+p[2]+'px;background:'+p[1]+'">'+(p[0]+1)+'<small>'+(o.k.finishT?ft(o.k.finishT,2):'退賽 · '+REASON[o.k.r.dnf.reason])+'</small></div></div>'}).join('');
+  $('podium').innerHTML=[[1,'var(--silver)',150],[0,'var(--gold)',200],[2,'var(--bronze)',115]].map(function(p){var o=fo[p[0]];if(!o)return '';return '<div class="pod"><div class="nm">'+esc(o.k.e.name)+'</div><div class="mem">'+esc(sid(o.k.e.id))+'</div><div class="blk num" style="height:'+p[2]+'px;background:'+p[1]+'">'+(p[0]+1)+'<small>'+(o.k.finishT?ft(o.k.finishT,2):'退賽 · '+REASON[o.k.r.dnf.reason])+'</small></div></div>'}).join('');
   $('finRows').innerHTML=fo.map(function(o,i){var k=o.k,d=k.grid-(i+1),res=o.out?'<span style="color:var(--red)">DNF · '+REASON[k.r.dnf.reason]+'（L'+k.r.dnf.lap+'）</span>':(i===0?ft(k.finishT,2):'+'+(k.finishT-winT).toFixed(2)+' s');
     return '<tr><td class="num"><b>'+(i+1)+'</b></td><td><span class="sw" style="background:'+k.color+'"></span><b>'+esc(k.e.name)+'</b></td><td class="num">P'+k.grid+'</td><td class="mv num '+(d>0?'up':d<0?'dn':'')+'">'+(o.out?'':d>0?'▲'+d:d<0?'▼'+(-d):'–')+'</td><td class="num">'+res+'</td><td class="num" style="font-size:13px">'+SIM.code(k.e.final.params)+'</td><td>'+(k.e.stats.aiAdopted?'<span class="tag ai">AI 設定</span>':'')+(S.wildcard[k.e.id]?'<span class="tag wc">外卡</span>':'')+'</td></tr>'}).join('');
   ROOM=roomResults();
