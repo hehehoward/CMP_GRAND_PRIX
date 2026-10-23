@@ -1,0 +1,1455 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CMP 大獎賽 · 車庫</title>
+<style>
+:root{
+  --ink:rgba(255,255,255,.94); --mute:rgba(235,235,245,.62); --dim:rgba(235,235,245,.36); --hair:rgba(255,255,255,.10); --hair2:rgba(255,255,255,.06);
+  --glass:rgba(255,255,255,.055); --glass2:rgba(255,255,255,.085);
+  --red:#ff375f; --blue:#0a84ff; --cyan:#5ac8fa; --green:#30d158; --yellow:#ffd60a; --purple:#bf5af2; --orange:#ff9f0a;
+  --s1:#5ac8fa; --s2:#ffd60a; --s3:#ff6b6b; --s4:#30d158;
+  --sans:-apple-system,"SF Pro Display","SF Pro Text","PingFang TC","Microsoft JhengHei UI","Microsoft JhengHei","Noto Sans TC",system-ui,sans-serif;
+  --r:22px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#06080c;color:var(--ink);font-family:var(--sans);font-size:14px;-webkit-font-smoothing:antialiased}
+body{background:
+  radial-gradient(900px 600px at 8% -10%,rgba(64,110,190,.30),transparent 60%),
+  radial-gradient(800px 600px at 105% 10%,rgba(160,60,140,.22),transparent 60%),
+  radial-gradient(900px 700px at 50% 120%,rgba(30,140,140,.16),transparent 60%),#06080c;background-attachment:fixed}
+button{font-family:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.glass{background:var(--glass);backdrop-filter:blur(30px) saturate(150%);-webkit-backdrop-filter:blur(30px) saturate(150%);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 24px 60px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.07)}
+header{position:sticky;top:12px;z-index:10;margin:12px 18px 0;display:flex;align-items:center;gap:14px;padding:10px 14px 10px 18px;border-radius:18px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.02em}
+.logo i{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#ff375f,#ff9f0a);box-shadow:0 0 18px rgba(255,55,95,.5)}
+.logo small{color:var(--dim);font-weight:500;margin-left:2px}
+.who{color:var(--mute);font-size:13px}.who b{color:var(--ink);font-weight:600}
+.sp{flex:1}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;background:var(--glass2);border:1px solid var(--hair);font-size:12.5px;color:var(--mute);white-space:nowrap}
+.chip b{color:var(--ink);font-weight:600}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+.chip.ok .dot{background:var(--green);box-shadow:0 0 8px var(--green)}
+.chip.warn .dot{background:var(--orange);box-shadow:0 0 8px var(--orange)}
+.chip.btn{cursor:pointer}.chip.btn:hover{background:rgba(255,255,255,.13)}
+#pg-test{grid-template-columns:minmax(0,1fr) 320px;gap:16px;padding:16px 18px 40px;max-width:1760px;margin:0 auto}
+@media(max-width:1100px){#pg-test{grid-template-columns:1fr}#colR{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}#colR>.glass+.glass{margin-top:0}}
+@media(max-width:900px){#pg-test{grid-template-columns:1fr}#colR{display:block}}
+.card{padding:18px}
+.card+.card,.glass+.glass{margin-top:16px}
+.dlsave{width:100%;margin-top:10px;padding:9px;border-radius:12px;border:1px solid var(--hair);background:rgba(255,255,255,.05);color:var(--mute);font-size:13px;cursor:pointer}.dlsave:hover{background:rgba(255,255,255,.1);color:#fff}
+.blocks>.glass+.glass{margin-top:0}
+.setp{position:absolute;right:16px;top:96px;z-index:4;width:236px;padding:12px 14px 10px;border-radius:16px;background:rgba(10,12,18,.72);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.setp .sph{display:flex;align-items:baseline;justify-content:space-between;font-size:14px;font-weight:700;margin-bottom:8px}
+.setp .sph a{font-size:11.5px;font-weight:500}
+.sq{display:grid;grid-template-columns:58px 22px 1fr;align-items:center;gap:6px;padding:3px 0}
+.sq .k{font-size:12.5px;color:var(--mute);white-space:nowrap}
+.sq .v{font-size:17px;font-weight:600;text-align:right;color:var(--c)}
+.sq .b{display:flex;gap:2px}.sq .b i{flex:1;height:10px;max-width:12px;border-radius:2px;background:rgba(255,255,255,.12)}.sq .b i.on{background:var(--c)}
+.sq.t .v{grid-column:2/4;text-align:left;font-size:15px}
+.setp .code{margin-top:8px;font-size:12px;color:var(--mute);text-align:center;padding:5px;border-radius:8px;background:rgba(255,255,255,.06)}
+.rt td.lap1{color:var(--mute)}
+.ttl{display:flex;align-items:baseline;gap:8px;margin:0 0 12px;font-size:13px;font-weight:600;color:var(--mute);letter-spacing:.04em}
+.ttl small{margin-left:auto;font-weight:400;color:var(--dim);font-size:12px;letter-spacing:0}
+/* setup */
+.car{display:block;margin:-4px auto 6px;width:150px}
+.pr{padding:11px 0;border-top:1px solid var(--hair2)}
+.pr:first-of-type{border-top:0}
+.pr .top{display:flex;align-items:baseline;gap:8px}
+.pr label{font-weight:600;font-size:14px}
+.pr .val{margin-left:auto;font-size:18px;font-weight:300}
+.pr .chg{font-size:10.5px;color:var(--orange);background:rgba(255,159,10,.12);border-radius:6px;padding:1px 6px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;margin:4px 0 0}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--blue) var(--p,50%),rgba(255,255,255,.14) var(--p,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;margin-top:-8px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:rgba(255,255,255,.14)}
+input[type=range]::-moz-range-progress{height:4px;border-radius:2px;background:var(--blue)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:0}
+.ends{display:flex;justify-content:space-between;color:var(--dim);font-size:11px;margin-top:-2px}
+.pc{margin-top:6px;font-size:12px;line-height:1.5}
+.pc div{display:flex;gap:6px}
+.pc .u{color:#7ee2a0}.pc .d{color:#ff9aa8}.pc .n{color:var(--dim)}
+.pc .u:before{content:"▲";font-size:9px;margin-top:3px}.pc .d:before{content:"▼";font-size:9px;margin-top:3px}
+.seg{display:flex;gap:4px;margin-top:8px;padding:3px;background:rgba(0,0,0,.25);border-radius:12px;border:1px solid var(--hair2)}
+.seg button{flex:1;background:transparent;border:0;padding:7px 0;border-radius:9px;cursor:pointer;font-weight:500;font-size:13px;color:var(--mute)}
+.seg button.on{background:rgba(255,255,255,.16);color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.seg .tdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.code{margin-top:12px;font-size:12px;color:var(--mute);text-align:center;letter-spacing:.06em;padding:8px;border-radius:12px;background:rgba(0,0,0,.22);border:1px solid var(--hair2)}
+
+/* ---- DNF ---- */
+.dnfcard{position:absolute;left:50%;top:14px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:10px 18px 10px 12px;border-radius:18px;background:linear-gradient(135deg,rgba(120,10,30,.82),rgba(40,6,14,.82));border:1px solid rgba(255,80,110,.55);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 0 40px rgba(255,55,95,.35),0 12px 30px rgba(0,0,0,.45);pointer-events:none;z-index:4;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+.dnfcard .fl{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:rgba(255,55,95,.25);border:1px solid rgba(255,90,120,.5)}
+.dnfcard .t1{font-size:22px;font-weight:800;letter-spacing:.06em;color:#fff;line-height:1.1}.dnfcard .t1 small{font-size:12px;font-weight:700;letter-spacing:.18em;color:#ff9aa8;margin-left:8px}
+.dnfcard .t2{font-size:13px;color:#ffc2cd;margin-top:2px}
+.lr .why{font-size:11px;color:#ff9aa8}
+/* ---- race FX ---- */
+.lights{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);display:none;gap:14px;padding:16px 22px 14px;border-radius:24px;background:rgba(8,10,14,.72);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--hair);box-shadow:0 20px 60px rgba(0,0,0,.5);z-index:6;pointer-events:none}
+.lights.on{display:flex;animation:pop .25s}
+.lights .lc{display:flex;flex-direction:column;gap:8px;padding:8px;border-radius:14px;background:#050608;border:1px solid rgba(255,255,255,.06)}
+.lights .lc i{width:30px;height:30px;border-radius:50%;background:#1a1c22;box-shadow:inset 0 2px 6px rgba(0,0,0,.8);transition:background .06s,box-shadow .06s}
+.lights .lc.lit i{background:radial-gradient(circle at 40% 35%,#ff8a9a,#ff1a3c 55%,#a8001c);box-shadow:0 0 18px 4px rgba(255,30,60,.75)}
+.lights .cap{position:absolute;left:0;right:0;bottom:-26px;text-align:center;font-size:12px;letter-spacing:.2em;color:var(--mute)}
+.golbl{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);font-size:64px;font-weight:800;letter-spacing:.08em;color:#7ee2a0;text-shadow:0 0 30px rgba(48,209,88,.8);animation:goOut .9s forwards;pointer-events:none;z-index:6}
+@keyframes goOut{0%{transform:translate(-50%,-50%) scale(.6);opacity:0}20%{transform:translate(-50%,-50%) scale(1.08);opacity:1}100%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
+.shift{display:flex;gap:3px;padding:5px 7px;border-radius:10px;background:rgba(5,6,9,.75);border:1px solid var(--hair)}
+.shift i{width:9px;height:9px;border-radius:50%;background:#1b1d24;transition:background .05s}
+.shift i.g{background:#30d158;box-shadow:0 0 6px #30d158}.shift i.r{background:#ff375f;box-shadow:0 0 6px #ff375f}.shift i.b{background:#5e8bff;box-shadow:0 0 6px #5e8bff}
+.shift.flash i{background:#5e8bff!important;box-shadow:0 0 8px #5e8bff}
+.gw .gear{position:absolute;right:-6px;top:6px;width:30px;height:30px;border-radius:9px;background:rgba(5,6,9,.75);border:1px solid var(--hair);display:grid;place-items:center;font-size:18px;font-weight:600}
+.chip.drs{transition:all .2s;color:var(--dim)}
+.chip.drs.on{color:#06210f;background:#30d158;border-color:#30d158;box-shadow:0 0 18px rgba(48,209,88,.6);font-weight:700}
+.onb{position:absolute;right:16px;top:96px;width:200px;height:124px;border-radius:16px;border:1px solid var(--hair);background:rgba(5,6,9,.6);box-shadow:0 10px 30px rgba(0,0,0,.4);pointer-events:none;opacity:0;transition:opacity .4s}
+.onb.on{opacity:1}
+.onbl{position:absolute;right:26px;top:102px;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.75);pointer-events:none;opacity:0;transition:opacity .4s;z-index:2}
+.onbl.on{opacity:1}.onbl b{color:#ff375f}
+.vign{position:absolute;inset:0;pointer-events:none;opacity:0;box-shadow:inset 0 0 140px 40px var(--vc,#ff375f);z-index:3}
+.vign.go2{animation:vig 1.1s ease-out}
+@keyframes vig{0%{opacity:.9}100%{opacity:0}}
+.tw.shake{animation:twshk .45s}
+@keyframes twshk{15%{transform:translate(-7px,3px)}30%{transform:translate(6px,-4px)}45%{transform:translate(-5px,2px)}60%{transform:translate(4px,-2px)}80%{transform:translate(-2px,1px)}}
+.chq{position:absolute;inset:0;pointer-events:none;z-index:5;opacity:0;background:repeating-conic-gradient(#f4f4f4 0 25%,#0c0d10 0 50%) 0 0/34px 34px}
+.chq.go2{animation:chq 1.2s cubic-bezier(.6,0,.3,1)}
+@keyframes chq{0%{opacity:.9;clip-path:inset(0 100% 0 0)}45%{opacity:.9;clip-path:inset(0 0 0 0)}100%{opacity:.9;clip-path:inset(0 0 0 100%)}}
+.fxcv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:7}
+.lapban{position:absolute;left:50%;top:16px;transform:translateX(-50%);padding:6px 16px;border-radius:12px;font-size:14px;font-weight:700;letter-spacing:.12em;background:rgba(255,214,10,.92);color:#1a1400;animation:pop .3s;pointer-events:none;z-index:4}
+/* track */
+.trk{position:relative;padding:0;overflow:hidden}
+.tw{position:relative;height:min(calc(100vh - 292px),calc((100vw - 400px)*.6));min-height:340px}
+.tw{container-type:size}
+/* short browser windows: shrink the overlays and put 目前設定 and the gauge side by side so neither covers the other */
+@container (max-height:560px){.setp{top:66px;transform:scale(.72);transform-origin:top right}.gauge{bottom:12px!important;right:190px!important;transform:scale(.72);transform-origin:bottom right}.laptime{font-size:34px}}/* fits a normal browser window so the test buttons stay on screen */
+#cv{position:absolute;inset:0;width:100%;height:100%}
+.floor{position:absolute;left:-50%;right:-50%;top:-80%;bottom:-25%;pointer-events:none;transform-origin:50% 63.4%;transform:perspective(1400px) rotateX(45deg);
+background:radial-gradient(ellipse 40% 30% at 50% 63%,rgba(34,56,96,.55),transparent 70%),linear-gradient(rgba(110,170,255,.08) 1px,transparent 1px) 0 0/100px 100px,linear-gradient(90deg,rgba(110,170,255,.08) 1px,transparent 1px) 0 0/100px 100px,linear-gradient(rgba(110,170,255,.03) 1px,transparent 1px) 0 0/20px 20px,linear-gradient(90deg,rgba(110,170,255,.03) 1px,transparent 1px) 0 0/20px 20px,#070a10;
+-webkit-mask-image:linear-gradient(180deg,transparent 0,transparent 28%,#000 52%);mask-image:linear-gradient(180deg,transparent 0,transparent 28%,#000 52%)}
+#cv.tilt{top:-5%;bottom:5%}
+.tilt{transform-origin:50% 50%;transform:perspective(1400px) rotateX(45deg);will-change:transform;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%);mask-image:linear-gradient(180deg,transparent 0,#000 14%)}
+.tw{overflow:hidden;background:#05070b}
+.ov{position:absolute;pointer-events:none}
+.tl{top:16px;left:18px;display:flex;gap:8px;align-items:center}
+.tr{top:12px;right:20px;text-align:right}
+.laptime{font-size:46px;font-weight:200;letter-spacing:-.01em;line-height:1}
+.lapsub{margin-top:6px;display:flex;gap:8px;justify-content:flex-end;align-items:center}
+.dchip{font-size:13px;font-weight:600;padding:3px 9px;border-radius:8px;background:rgba(255,255,255,.08)}
+.dchip.p{color:var(--purple);background:rgba(191,90,242,.15)}.dchip.g{color:var(--green);background:rgba(48,209,88,.13)}.dchip.y{color:var(--yellow);background:rgba(255,214,10,.12)}
+.gauge{right:16px;bottom:86px;width:200px;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.gtop{display:flex;align-items:flex-end;gap:10px}
+.gw{position:relative;width:150px;height:118px}
+.gw svg{position:absolute;inset:0}
+.gw .v{position:absolute;left:0;right:0;top:44px;text-align:center;font-size:36px;font-weight:200;line-height:1}
+.gw .u{position:absolute;left:0;right:0;top:84px;text-align:center;font-size:11px;color:var(--dim);letter-spacing:.1em}
+.pedals{display:flex;gap:6px;height:96px;padding-bottom:10px}
+.pedal{width:8px;height:100%;border-radius:4px;background:rgba(255,255,255,.08);position:relative;overflow:hidden}
+.pedal i{position:absolute;left:0;right:0;bottom:0;border-radius:4px}
+.pedal.t i{background:var(--green)}.pedal.b i{background:var(--red)}
+.mini{display:flex;gap:6px;width:200px}
+.mt{flex:1;padding:6px 9px;border-radius:12px;background:rgba(10,12,18,.55);border:1px solid var(--hair);backdrop-filter:blur(20px)}
+.mt .k{font-size:10.5px;color:var(--dim);letter-spacing:.06em}
+.mt .v{font-size:15px;font-weight:400;margin-top:1px}
+.splits{left:16px;right:16px;bottom:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.spl{padding:9px 12px;border-radius:14px;background:rgba(10,12,18,.55);border:1px solid var(--hair);backdrop-filter:blur(20px);position:relative;overflow:hidden}
+.spl:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c)}
+.spl .n{font-size:11px;color:var(--mute)}
+.spl .t{font-size:19px;font-weight:300;margin-top:2px;display:flex;align-items:baseline;gap:8px}
+.spl .vs{font-size:12px;font-weight:600}.spl .vs.g{color:#7ee2a0}.spl .vs.r{color:#ff9aa8}
+.spl.on{border-color:rgba(255,255,255,.28)}
+.spl.p .t{color:var(--purple)}.spl.g .t{color:var(--green)}.spl.y .t{color:var(--yellow)}
+.idle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;background:radial-gradient(closest-side,rgba(6,8,12,.55),transparent)}
+.idle b{font-size:22px;font-weight:500}.idle span{color:var(--mute)}
+.banner{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);padding:12px 20px;border-radius:16px;font-size:20px;font-weight:600;background:rgba(14,16,22,.78);border:1px solid var(--hair);backdrop-filter:blur(24px);white-space:nowrap;animation:pop .3s cubic-bezier(.2,1.4,.4,1);pointer-events:none;box-shadow:0 0 40px var(--glow,rgba(255,255,255,.1))}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(.8);opacity:0}}
+.prog{height:3px;background:rgba(255,255,255,.06)}.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--purple))}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px}
+@media(max-width:1100px){.acts{grid-template-columns:1fr 1fr}}
+.ab{display:flex;flex-direction:column;gap:2px;align-items:flex-start;padding:12px 16px;border-radius:16px;border:1px solid var(--hair);background:var(--glass2);cursor:pointer;transition:all .15s;text-align:left}
+.ab:hover:not(:disabled){background:rgba(255,255,255,.13);transform:translateY(-1px)}
+.ab:disabled{opacity:.35;cursor:not-allowed}
+.ab b{font-size:15px;font-weight:600}.ab small{color:var(--mute);font-size:12px}
+.ab.pri{background:linear-gradient(135deg,rgba(255,55,95,.9),rgba(255,95,70,.85));border-color:rgba(255,255,255,.2)}
+.ab.pri small{color:rgba(255,255,255,.8)}
+.ab.ai{background:linear-gradient(135deg,rgba(191,90,242,.22),rgba(10,132,255,.14))}
+.aibox{margin:0 14px 14px;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,rgba(191,90,242,.14),rgba(10,132,255,.08));border:1px solid rgba(191,90,242,.3)}
+.aibox .t{font-weight:600;color:#d9b3ff;margin-bottom:6px}
+.aibox ul{margin:6px 0 10px;padding-left:18px}.aibox li{margin:3px 0}
+.aibar{height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}.aibar i{display:block;height:100%;width:0;background:var(--purple)}
+.pill{border:1px solid var(--hair);background:var(--glass2);border-radius:10px;padding:7px 14px;cursor:pointer;font-size:13px}
+.pill.v{background:rgba(191,90,242,.3);border-color:rgba(191,90,242,.5)}
+/* analysis */
+.ana{padding:18px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:1200px){.kpis{grid-template-columns:repeat(3,1fr)}}
+.kpi{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--hair2)}
+.kpi .k{font-size:11.5px;color:var(--mute)}
+.kpi .v{font-size:26px;font-weight:300;margin-top:4px;line-height:1.1}
+.kpi .s{font-size:11.5px;color:var(--dim);margin-top:3px}
+.cue{margin:12px 0 4px;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--hair2);font-size:13.5px;color:var(--mute)}
+.cue b{color:var(--ink);font-weight:600}
+.row{display:grid;gap:12px;margin-top:12px}
+.r2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media(max-width:1200px){.r2{grid-template-columns:1fr}}
+.pane{padding:14px 14px 10px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid var(--hair2)}
+.pane h4{margin:0 0 6px;font-size:12.5px;font-weight:600;color:var(--mute);display:flex;gap:10px;align-items:center}
+.pane h4 .lg{margin-left:auto;display:flex;gap:12px;font-weight:400;font-size:11.5px;color:var(--dim)}
+.lg i{display:inline-block;width:14px;height:2px;vertical-align:3px;margin-right:5px;border-radius:1px}
+svg text{font-family:var(--sans)}
+.evs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ev{font-size:12px;padding:5px 10px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--hair2)}
+.ev.r{color:#ff9aa8;border-color:rgba(255,55,95,.3)}.ev.o{color:#ffc46b;border-color:rgba(255,159,10,.3)}.ev.g{color:#7ee2a0;border-color:rgba(48,209,88,.25)}
+.risks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.rk{padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--hair2)}
+.rk .k{font-size:11px;color:var(--dim)}.rk .v{font-size:19px;font-weight:300;margin-top:2px}
+.lv0{color:var(--green)}.lv1{color:var(--orange)}.lv2{color:var(--red)}
+.verdict{margin-top:10px;padding:9px 12px;border-radius:12px;font-size:13px;font-weight:500}
+.verdict.ok{background:rgba(48,209,88,.1);color:#7ee2a0}.verdict.no{background:rgba(255,55,95,.12);color:#ff9aa8}
+.empty{color:var(--dim);text-align:center;padding:30px 10px}
+/* right column */
+.log{max-height:430px;overflow:auto;margin:0 -6px}
+.lr{display:grid;grid-template-columns:22px 20px 1fr auto;gap:8px;align-items:center;padding:8px 8px;border-radius:12px;cursor:pointer}
+.lr:hover{background:rgba(255,255,255,.06)}
+.lr .i{color:var(--dim);font-size:12px}
+.lr .c{font-size:11px;color:var(--dim);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lr>div{min-width:0}
+.lr .t{font-size:15px;font-weight:300;text-align:right}
+.lr .bars{display:flex;gap:2px;margin-top:4px}
+.lr .bars i{height:3px;flex:1;border-radius:2px;opacity:.85}
+.lr.pb .t{color:var(--purple)}
+.lr.sel{background:rgba(255,255,255,.08)}
+.sub{width:100%;padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.2);background:linear-gradient(135deg,rgba(48,209,88,.85),rgba(40,180,140,.8));font-size:15px;font-weight:600;cursor:pointer}
+.sub:disabled{opacity:.4;cursor:not-allowed}
+.hint{color:var(--mute);font-size:12.5px;line-height:1.55}
+.brief ul{margin:0;padding-left:18px}.brief li{margin:6px 0;color:var(--mute);line-height:1.5;font-size:13px}.brief b{color:var(--ink);font-weight:600}
+.fc{margin-top:12px;display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:rgba(90,200,250,.08);border:1px solid rgba(90,200,250,.2)}
+.fc .e{font-size:24px}
+/* modal */
+.modal{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(4,6,10,.55);backdrop-filter:blur(14px)}
+.modal .box{width:100%;max-width:480px;padding:28px}
+.modal h1{margin:6px 0 4px;font-size:26px;font-weight:600}
+.modal p{color:var(--mute);line-height:1.6;margin:6px 0 14px}
+.fld{margin:12px 0}
+.fld label{display:block;font-size:12px;color:var(--mute);margin-bottom:6px}
+.fld input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--hair);background:rgba(0,0,0,.3);color:var(--ink);font-size:15px;font-family:inherit;outline:none}
+.fld input:focus{border-color:var(--blue)}
+.fold{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--hair2);margin:14px 0}
+.fold .s{flex:1;font-size:13px;color:var(--mute)}
+.go{width:100%;padding:14px;border-radius:14px;border:0;background:linear-gradient(135deg,#ff375f,#ff6a3d);font-size:16px;font-weight:600;cursor:pointer}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 6px}
+.steps>div{padding:12px 12px 11px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid var(--hair2);display:flex;flex-direction:column;gap:3px}
+.steps i{font-style:normal;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:linear-gradient(135deg,#ff375f,#ff9f0a);margin-bottom:4px}
+.steps b{font-size:14.5px}.steps span{font-size:12px;color:var(--mute);line-height:1.45}
+.pathbox{margin:10px 0 8px;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid var(--hair);display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.pathbox .pl{width:100%;font-size:11.5px;color:var(--dim)}
+.pathbox code{flex:1;min-width:0;font-size:12.5px;color:#cfe6ff;word-break:break-all;font-family:Consolas,"SF Mono",monospace}
+.psteps{margin:6px 0 14px;padding-left:20px;color:var(--mute);font-size:13px;line-height:1.7}.psteps b{color:var(--ink)}
+.saerr{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:rgba(255,55,95,.14);border:1px solid rgba(255,55,95,.4);color:#ffb3c0;font-size:13px;line-height:1.55}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:40;padding:11px 18px;border-radius:14px;background:rgba(30,32,40,.85);border:1px solid var(--hair);backdrop-filter:blur(20px);font-size:13.5px}
+
+.chip.cd{font-size:14px;color:var(--ink)}.chip.cd b{font-size:16px;font-weight:600}
+.chip.cd.warn{border-color:rgba(255,159,10,.6);color:#ffc46b;background:rgba(255,159,10,.12)}
+.chip.cd.over{border-color:rgba(255,55,95,.7);color:#fff;background:rgba(255,55,95,.55);animation:cdbl 1s infinite}
+@keyframes cdbl{50%{opacity:.55}}
+/* ---- pages ---- */
+.pages{flex:1;display:flex;justify-content:center;gap:6px}
+.pages button{display:flex;align-items:center;gap:8px;border:0;background:transparent;padding:8px 18px;border-radius:12px;cursor:pointer;color:var(--mute);font-size:14.5px;font-weight:500}
+.pages button span{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.08);font-size:11px;display:grid;place-items:center}
+.pages button.on{background:rgba(255,255,255,.12);color:#fff}.pages button.on span{background:var(--red)}
+.page{display:none}.page.on{display:grid}
+#pg-design{grid-template-columns:minmax(0,1.35fr) minmax(420px,1fr);gap:16px;padding:16px 18px 30px;max-width:1760px;margin:0 auto;min-height:calc(100vh - 90px)}
+@media(max-width:1200px){#pg-design{grid-template-columns:1fr}}
+.stage3d{position:relative;overflow:hidden;min-height:560px;background:radial-gradient(ellipse at 50% 70%,rgba(70,90,140,.25),transparent 60%),rgba(255,255,255,.035)}
+#c3d{position:absolute;inset:0;width:100%;height:100%;cursor:grab}#c3d:active{cursor:grabbing}
+.lbllines,.taglines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.lbllayer,.tags{position:absolute;inset:0;pointer-events:none}
+.lbl{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;padding:8px 13px;border-radius:14px;background:rgba(12,14,20,.62);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);white-space:nowrap;transition:box-shadow .3s,border-color .3s;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.lbl .k{font-size:11px;color:var(--mute);letter-spacing:.04em}
+.lbl .v{font-size:22px;font-weight:300;line-height:1.1;display:flex;align-items:baseline;gap:6px}
+.lbl .v small{font-size:11px;color:var(--dim)}
+.lbl.hot{border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 0 26px var(--c)}
+.lbl .bar{display:flex;gap:2px;margin-top:5px}.lbl .bar i{width:7px;height:3px;border-radius:2px;background:rgba(255,255,255,.14)}.lbl .bar i.on{background:var(--c)}
+.st-top{position:absolute;left:22px;top:18px}
+.st-t{font-size:26px;font-weight:600;letter-spacing:.02em}.st-t span{font-size:14px;color:var(--mute);font-weight:400;margin-left:8px}
+.st-h{font-size:12px;color:var(--dim);margin-top:4px}
+.st-bot{position:absolute;left:22px;bottom:18px;display:flex;gap:10px;align-items:center}
+.st-bot .code{margin:0;padding:8px 14px}
+.st-tag{font-size:12px;color:var(--mute);padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.06)}
+.side{display:flex;flex-direction:column;gap:16px}
+.blocks{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.blocks{grid-template-columns:1fr}}
+.blk{padding:16px 16px 14px;outline:none;transition:border-color .2s,box-shadow .2s;position:relative;overflow:hidden}
+.blk:before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:var(--c);opacity:.85}
+.blk:focus-within,.blk.focus{border-color:rgba(255,255,255,.28);box-shadow:0 0 0 1px var(--c),0 24px 60px rgba(0,0,0,.35)}
+.blk[data-k=tire]{grid-column:1/-1}
+.blk .hd{display:flex;align-items:center;gap:8px}
+.blk .hd b{font-size:15px;font-weight:600}
+.blk .hd .ic{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.07);font-size:14px}
+.blk .chg{margin-left:auto;font-size:10.5px;color:var(--orange);background:rgba(255,159,10,.12);border-radius:6px;padding:2px 7px}
+.drum{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;margin:12px 0 4px}
+.arw{width:40px;height:40px;border-radius:12px;border:1px solid var(--hair);background:rgba(255,255,255,.06);cursor:pointer;font-size:16px;display:grid;place-items:center;transition:all .15s}
+.arw:hover:not(:disabled){background:rgba(255,255,255,.14)}.arw:active:not(:disabled){transform:scale(.94)}.arw:disabled{opacity:.25;cursor:default}
+.reel{display:flex;align-items:center;justify-content:center;gap:0;height:78px;overflow:hidden;position:relative;mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
+.reel span{flex:0 0 auto;width:54px;text-align:center;font-weight:200;color:var(--ink);cursor:pointer;transition:all .25s cubic-bezier(.2,.8,.2,1);font-variant-numeric:tabular-nums;user-select:none}
+.reel span.c{font-size:60px;width:88px;font-weight:200;cursor:default}
+.reel span.n1{font-size:30px;opacity:.35}.reel span.n2{font-size:20px;opacity:.14}
+.reel span.e{opacity:0;cursor:default}
+.reel.tx span{white-space:nowrap}.reel.tx span.c{font-size:30px;width:150px;font-weight:300}.reel.tx span.n1{font-size:15px;width:84px}.reel.tx span.n2{width:30px;font-size:12px}
+.reel .tdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:4px}
+.reel span.n1{width:54px}
+@media(max-width:1500px){.reel span.n1{width:38px;font-size:24px}.reel span.n2{width:20px;font-size:14px}.reel span.c{width:76px}}
+.ticks{display:flex;gap:3px;justify-content:center;margin:2px 0 10px}.ticks i{width:16px;height:3px;border-radius:2px;background:rgba(255,255,255,.12)}.ticks i.on{background:var(--c)}
+.ends2{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin:-4px 2px 8px}
+.go-test{display:flex;align-items:center;gap:16px;padding:16px 18px}.go-test>div{flex:1}
+.mini2{display:grid;grid-template-columns:1fr auto;gap:8px 10px;align-items:center}
+.mini2 .k{color:var(--mute);font-size:13px}.mini2 .v{font-size:20px;font-weight:300;text-align:right}
+#editSetup{color:#7cc4ff;text-decoration:none}
+.st-go{position:absolute;right:20px;bottom:18px;z-index:3;padding:13px 22px;box-shadow:0 12px 34px rgba(255,55,95,.35)}
+.st-go b{font-size:16px}
+@media(max-height:940px){.blk{padding:12px 14px 10px}.drum{margin:6px 0 2px}.reel{height:60px}.reel span.c{font-size:46px;width:70px}.reel span.n1{font-size:24px}.reel.tx span.c{font-size:26px}.ticks{margin:0 0 6px}.pc{font-size:11.5px;line-height:1.4;margin-top:4px}.blocks{gap:10px}.side{gap:10px}#pg-design{padding-top:12px}.ends2{margin-bottom:4px}.arw{width:36px;height:36px}.drum{grid-template-columns:36px 1fr 36px}}
+
+/* ---- DOE batch ---- */
+.acts{grid-template-columns:repeat(4,1fr)}
+@media(max-width:1300px){.acts{grid-template-columns:1fr 1fr}}
+.ab.doe{background:linear-gradient(135deg,rgba(90,200,250,.22),rgba(191,90,242,.22));border-color:rgba(150,170,255,.35)}
+.ab.doe .hl{color:#ffd60a;font-weight:600}
+.bx-box{max-width:820px!important;max-height:92vh;overflow:auto}
+.bx-hd{display:flex;gap:12px;align-items:flex-start}.bx-hd>div{flex:1}.bx-hd h1{font-size:24px}
+.bx-row{display:grid;grid-template-columns:96px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--hair2)}
+.bx-row .nm{font-weight:600;font-size:14px;display:flex;align-items:center;gap:7px}.bx-row .nm i{width:3px;height:14px;border-radius:2px;background:var(--c)}
+.bx-row.var .nm{color:#fff}.bx-row.var{background:linear-gradient(90deg,rgba(255,255,255,.04),transparent)}
+.bx-chips{display:flex;flex-wrap:wrap;gap:5px}
+.bx-c{min-width:34px;padding:6px 9px;border-radius:9px;border:1px solid var(--hair);background:rgba(255,255,255,.04);cursor:pointer;font-size:14px;text-align:center;position:relative;transition:all .12s;font-variant-numeric:tabular-nums}
+.bx-c:hover{background:rgba(255,255,255,.1)}
+.bx-c.on{background:var(--c);border-color:var(--c);color:#0b0d12;font-weight:700;box-shadow:0 0 12px -2px var(--c)}
+.bx-c.cur:after{content:"";position:absolute;left:50%;bottom:2px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:currentColor;opacity:.7}
+.bx-q{display:flex;gap:4px}.bx-q button{font-size:11.5px;padding:5px 8px}
+.bx-sum{margin-top:12px;padding:14px 16px;border-radius:16px;background:rgba(0,0,0,.28);border:1px solid var(--hair2);display:grid;grid-template-columns:auto 1fr auto;gap:6px 18px;align-items:center}
+.bx-sum .n{font-size:40px;font-weight:200;line-height:1}.bx-sum .n small{font-size:14px;color:var(--mute);margin-left:4px}
+.bx-sum .f{color:var(--mute);font-size:13px;line-height:1.5}.bx-sum .tm{text-align:right}.bx-sum .tm b{font-size:22px;font-weight:300}
+.bx-badge{display:inline-block;margin-top:4px;padding:3px 9px;border-radius:8px;font-size:12px;font-weight:700}
+.bx-badge.y{background:rgba(255,214,10,.16);color:#ffd60a}.bx-badge.d{background:rgba(255,255,255,.07);color:var(--mute);font-weight:500}.bx-badge.r{background:rgba(255,55,95,.18);color:#ff9aa8}
+.bx-prev{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.bx-prev span{font-size:11px;padding:3px 7px;border-radius:7px;background:rgba(255,255,255,.05);color:var(--mute);font-variant-numeric:tabular-nums}
+.bx-act{display:flex;gap:10px;align-items:center;margin-top:14px}.bx-act .go{width:auto;padding:13px 26px}
+.bx-act .go:disabled{opacity:.35;cursor:not-allowed}
+#batchOut .glass{margin-top:16px;padding:16px 18px}
+.bxo-h{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}.bxo-h b{font-size:15px}.bxo-h small{color:var(--dim)}.bxo-h .sp{flex:1}
+.bxo-list{display:flex;flex-wrap:wrap;gap:6px}
+.bxo-i{padding:7px 10px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--hair2);font-size:12px;color:var(--mute);min-width:118px}
+.bxo-i b{display:block;font-size:15px;font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums}
+.bxo-i.run{border-color:rgba(90,200,250,.6);box-shadow:0 0 14px -4px #5ac8fa}.bxo-i.run b{color:#5ac8fa}
+.bxo-i.best{border-color:#bf5af2}.bxo-i.best b{color:#d9a6ff}
+.bxo-grid{display:grid;gap:4px;margin:4px 0 10px}
+.bxo-grid .ax{font-size:11.5px;color:var(--mute);display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.bxo-grid .ax.t{font-weight:600;color:var(--ink)}
+.bxo-cell{border-radius:10px;padding:8px 4px;text-align:center;cursor:pointer;font-size:14px;font-variant-numeric:tabular-nums;color:#0b0d12;font-weight:600;position:relative;border:2px solid transparent;transition:transform .12s}
+.bxo-cell:hover{transform:scale(1.04)}.bxo-cell small{display:block;font-size:10px;font-weight:500;opacity:.75}
+.bxo-cell.best{border-color:#fff;box-shadow:0 0 18px -2px rgba(191,90,242,.8)}
+.bxo-cell.dnf{background:rgba(255,55,95,.25)!important;color:#ff9aa8}
+.bxo-ins{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+@media(max-width:1100px){.bxo-ins{grid-template-columns:1fr}}
+.bxo-me{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--hair2);font-size:12.5px;color:var(--mute)}
+.bxo-me h5{margin:0 0 6px;font-size:12.5px;color:var(--ink);font-weight:600;display:flex;gap:8px}.bxo-me h5 span{margin-left:auto;color:#ffd60a}
+.bxo-bars{display:flex;align-items:flex-end;gap:4px;height:46px}.bxo-bars div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:10px}
+.bxo-bars i{display:block;width:100%;border-radius:4px 4px 0 0;background:var(--c);opacity:.85;min-height:3px}
+.bxo-note{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.bxo-btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.ab.doe.used{opacity:.4}.ab.dz{width:100%;padding:14px 18px;align-items:center;text-align:center}.ab.dz b{font-size:16px}.bxleft{font-size:14px;color:var(--mute);font-weight:400}
+
+/* ---- result card (test page) ---- */
+.rc{margin-top:16px;padding:18px 20px}
+.rc-top{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
+.rc-lap .k{font-size:12px;color:var(--mute)}.rc-lap .v{font-size:40px;font-weight:200;line-height:1.05}
+.rc-dl{display:flex;flex-direction:column;gap:6px}
+.rc-pill{display:inline-flex;gap:6px;align-items:baseline;font-size:13px;color:var(--mute)}.rc-pill b{font-size:17px;font-weight:600}
+.g{color:#7ee2a0}.r{color:#ff9aa8}.pp{color:#d9a6ff}.yy{color:#ffd60a}
+.rc-verdict{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid var(--hair2);font-size:15px;line-height:1.6}
+.rc-verdict b{color:#fff}
+.rc-secs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.rc-sec{padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--hair2);position:relative;overflow:hidden}
+.rc-sec:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c)}
+.rc-sec .n{font-size:11px;color:var(--mute)}.rc-sec .t{font-size:18px;font-weight:300}.rc-sec .d{font-size:12px;font-weight:600}
+.rc-sec.p{background:rgba(191,90,242,.12)}.rc-sec.g{background:rgba(48,209,88,.08)}.rc-sec.y{background:rgba(255,214,10,.06)}
+.rc-foot{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}.rc-foot .sp{flex:1}
+.rc-risk{font-size:13px;color:var(--mute)}.rc-risk b{color:var(--ink)}
+.rc-go{border:1px solid rgba(150,170,255,.4);background:linear-gradient(135deg,rgba(90,200,250,.18),rgba(191,90,242,.18));border-radius:12px;padding:9px 16px;cursor:pointer;font-weight:600;font-size:14px}
+/* ---- analysis page ---- */
+#pg-ana{display:none;grid-template-columns:1fr;gap:16px;padding:16px 18px 50px;max-width:1320px;margin:0 auto}#pg-ana.on{display:grid}
+.an-top{display:flex;align-items:center;gap:20px;padding:16px 22px;position:sticky;top:84px;z-index:5}
+.an-t{font-size:24px;font-weight:600}.an-s{font-size:13px;color:var(--mute);margin-top:2px}
+.an-nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}.an-nav a{color:var(--mute);text-decoration:none;font-size:13px;padding:7px 12px;border-radius:10px;background:rgba(255,255,255,.05)}.an-nav a:hover{background:rgba(255,255,255,.12);color:#fff}
+.an-sec{padding:18px 20px;scroll-margin-top:170px}
+.rt{width:100%;border-collapse:collapse;font-size:13.5px}
+.rt th{font-size:11.5px;color:var(--dim);font-weight:500;text-align:left;padding:7px 8px;border-bottom:1px solid var(--hair);cursor:pointer;user-select:none;white-space:nowrap}
+.rt th.on{color:#fff}.rt th.on:after{content:" ▲";font-size:9px}.rt th.on.desc:after{content:" ▼"}
+.rt td{padding:7px 8px;border-bottom:1px solid var(--hair2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.rt tr.rrow{cursor:pointer}.rt tr.rrow:hover td{background:rgba(255,255,255,.05)}.rt tr.sel td{background:rgba(90,200,250,.08)}
+.rt tr.best td:first-child{box-shadow:inset 3px 0 0 #bf5af2}
+.kv{display:inline-block;min-width:22px;text-align:center;padding:2px 5px;border-radius:6px;background:rgba(255,255,255,.06);margin-right:3px;font-size:12px}
+.kv.ch{background:color-mix(in srgb,var(--c) 30%,transparent);color:#fff;font-weight:600}
+.sc.p{color:#d9a6ff;font-weight:600}.sc.g{color:#7ee2a0}.sc.y{color:#ffd60a}
+.fx-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:1300px){.fx-grid{grid-template-columns:repeat(3,1fr)}}
+.fx{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--hair2)}
+.fx h5{margin:0 0 4px;font-size:13px;display:flex;gap:6px;align-items:center}.fx h5 i{width:3px;height:13px;border-radius:2px;background:var(--c)}
+.fx .s{font-size:11.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+.cmp-pick{display:flex;gap:10px;align-items:center;margin-bottom:12px}.cmp-pick select{background:rgba(0,0,0,.3);border:1px solid var(--hair);border-radius:10px;padding:8px 10px;color:var(--ink);font-family:inherit;font-size:13px;min-width:280px}
+.cmp-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:14px}
+@media(max-width:1100px){.cmp-row{grid-template-columns:1fr}}
+.risk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.rk2{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--hair2)}
+.rk2 .k{font-size:12px;color:var(--mute)}.rk2 .v{font-size:24px;font-weight:300;margin-top:3px}.rk2 .s{font-size:12px;color:var(--dim);margin-top:2px;line-height:1.45}
+.cov3{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.cov3 span{font-size:12.5px;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.05);color:var(--mute)}.cov3 span.ok{color:#7ee2a0;background:rgba(48,209,88,.1)}
+/* ---- sector tags on track ---- */
+.stag{position:absolute;transform:translate(-50%,-50%);min-width:136px;padding:8px 12px 9px;border-radius:14px;background:rgba(12,14,20,.66);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:border-color .25s,box-shadow .25s;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.stag:before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:2px;background:var(--c)}
+.stag .n{font-size:11px;color:var(--mute)}
+.stag .t{font-size:21px;font-weight:300;line-height:1.15;display:flex;align-items:baseline;gap:8px}
+.stag .t .d{font-size:12.5px;font-weight:600}
+.stag .t .d.g{color:#7ee2a0}.stag .t .d.r{color:#ff9aa8}
+.stag.on{border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 0 24px rgba(0,0,0,.2)}
+.stag.p .t>span:first-child{color:var(--purple)}.stag.g .t>span:first-child{color:var(--green)}.stag.y .t>span:first-child{color:var(--yellow)}
+.stag .ev{margin-top:5px;font-size:12.5px;font-weight:600;padding:4px 8px;border-radius:8px;animation:evIn .4s cubic-bezier(.2,1.4,.4,1)}
+.stag .ev.r{background:rgba(255,55,95,.18);color:#ff9aa8}.stag .ev.o{background:rgba(255,159,10,.16);color:#ffc46b}
+.stag.alert{animation:shake .5s}
+@keyframes evIn{from{transform:scale(.6);opacity:0}}
+@keyframes shake{20%,60%{transform:translate(-50%,-50%) translateX(-4px)}40%,80%{transform:translate(-50%,-50%) translateX(4px)}}
+
+/* ================= phone (portrait) ================= */
+@media(max-width:760px){
+  html,body{font-size:13.5px;overflow-x:hidden}
+  header{top:0;margin:0;border-radius:0 0 16px 16px;flex-wrap:wrap;gap:6px 8px;padding:8px 10px}
+  header .logo{font-size:14px}header .logo small,header .who{display:none}
+  header .chip{padding:4px 9px;font-size:11.5px}
+  header .chip:nth-of-type(3){display:none}
+  #folderChip{margin-left:auto}
+  .pages{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:20;justify-content:space-around;padding:6px;border-radius:18px;background:rgba(14,16,22,.92);border:1px solid var(--hair);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .pages button{flex:1;padding:10px 4px!important;font-size:13px!important}
+  .page{padding:10px 10px 96px!important;gap:12px!important}
+  .modal .box{padding:20px 16px;max-height:calc(100vh - 24px);overflow:auto}
+  .steps{grid-template-columns:1fr!important;gap:6px}.steps>div{flex-direction:row;align-items:center;gap:10px;padding:9px 12px}.steps span{display:none}
+  /* design */
+  #pg-design{grid-template-columns:1fr!important;min-height:0}
+  .stage3d{min-height:300px!important;height:300px}
+  .lbl{padding:4px 8px;border-radius:10px}.lbl .k{font-size:9.5px}.lbl .v{font-size:15px}.lbl .bar{display:none}
+  .st-t{font-size:20px}.st-h{display:none}
+  .blocks{grid-template-columns:1fr!important;gap:10px}
+  /* test */
+  #pg-test{grid-template-columns:1fr!important}
+  .tw{height:min(68vw,330px)!important;min-height:250px!important}
+  .ov.tl{transform:scale(.8);transform-origin:top left}
+  .laptime{font-size:28px!important}.lapsub{font-size:11px}
+  .tags{display:none}#tagLines{display:none}
+  .setp{position:static!important;transform:none!important;width:auto!important;margin:10px 12px 0;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .setp #setupMini{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+  .gauge{transform:scale(.55)!important;transform-origin:bottom right!important;right:8px!important;bottom:8px!important}
+  .acts{grid-template-columns:1fr 1fr!important;gap:8px;padding:10px!important}
+  .ab{padding:12px 10px!important}.ab b{font-size:14px}.ab small{font-size:11px}
+  #colR{display:block!important}
+  .rc-top{flex-wrap:wrap}.rc-secs{grid-template-columns:1fr 1fr!important}
+  /* analysis */
+  .an-top{flex-direction:column;align-items:flex-start}.an-nav{overflow-x:auto;white-space:nowrap;max-width:100%}
+  .kpis{grid-template-columns:1fr 1fr!important}
+  #pg-ana{grid-template-columns:minmax(0,1fr)!important}#pg-ana>*{min-width:0}.an-sec{padding:14px 12px!important;overflow:hidden}.an-top{position:static!important;padding:12px 14px!important}
+  #runsTbl>div{overflow-x:auto;-webkit-overflow-scrolling:touch}.ana{padding:12px!important}.ana *{min-width:0}
+  .an-sec svg{max-width:100%;height:auto}
+  .risk-grid{grid-template-columns:1fr 1fr!important}.cmp-pick{flex-wrap:wrap}.cmp-pick select{flex:1 1 140px;min-width:0;max-width:100%}
+  #hDrs,.ov.tl .chip:nth-child(2){display:none}
+  .fx-grid{grid-template-columns:1fr 1fr!important}
+  .r2,.cmp-row,.bxo-ins{grid-template-columns:1fr!important}
+  .rt{font-size:12px}
+  .bx-row{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<header class="glass">
+  <div class="logo"><i></i>CMP 大獎賽<small>車庫</small></div>
+  <div class="who" id="who"></div>
+  <nav class="pages" id="pages"><button data-p="design" class="on"><span>1</span>車輛設計</button><button data-p="test"><span>2</span>賽道測試</button><button data-p="ana"><span>3</span>賽果分析</button></nav>
+  <span class="chip cd" id="cdChip" style="display:none"></span>
+  <span class="chip"><span>測試</span><b class="num" id="nTests">0</b></span>
+  <span class="chip"><span>賽道時間</span><b class="num" id="tTime">0:00</b></span>
+  <span class="chip btn" id="sndChip" title="音效開關">🔊</span>
+  <span class="chip btn" id="folderChip"><span class="dot"></span><span id="folderTxt">未連接資料夾</span></span>
+</header>
+
+<!-- PAGE 1 · CAR DESIGN -->
+<main class="page on" id="pg-design">
+  <section class="glass stage3d">
+    <canvas id="c3d"></canvas>
+    <svg id="lblLines" class="lbllines"></svg>
+    <div id="lblLayer" class="lbllayer"></div>
+    <div class="st-top"><div class="st-t"><span id="carName" style="font-size:inherit;color:inherit;margin:0">CMP-26</span> <span>賽車設計</span></div><div class="st-h">拖曳可旋轉 · 滾輪縮放</div></div>
+    <div class="st-bot"><div class="code num" id="codeBox"></div><span id="setupTag" class="st-tag"></span></div>
+    <button class="ab pri st-go" id="toTest"><b>前往賽道測試 →</b><small>設定會自動帶過去</small></button>
+  </section>
+  <section class="side">
+    <div class="blocks" id="params"></div>
+    <button class="ab doe dz" id="runBatch2"><b>🧪 DOE 批次測試：一次規劃多組設定</b><small><span class="bl">剩餘 1 次</span> · 每人限 1 次 · <span class="hl">超過 5 組時間減半</span></small></button>
+  </section>
+</main>
+
+<!-- PAGE 2 · RACE TESTING -->
+<main class="page" id="pg-test">
+  <section id="colC">
+    <div class="glass trk">
+      <div class="tw">
+        <div class="floor"></div><canvas id="cv" class="tilt"></canvas>
+        <svg id="tagLines" class="taglines"></svg>
+        <div id="tags" class="tags"></div>
+        <div class="ov tl"><span class="chip" id="hSess">☀️ 練習賽 · 乾地 25°C</span><span class="chip">圈 <b class="num" id="hLap">–</b></span><span class="chip drs" id="hDrs">DRS</span></div>
+        <div class="vign" id="vign"></div><div class="chq" id="chq"></div>
+        <div class="lights" id="lights"><div class="lc"><i></i><i></i></div><div class="lc"><i></i><i></i></div><div class="lc"><i></i><i></i></div><div class="lc"><i></i><i></i></div><div class="lc"><i></i><i></i></div></div>
+        <div id="goHost"></div><div id="lapBan"></div>
+        <div class="ov tr"><div class="laptime num" id="hTime">0:00.000</div><div class="lapsub" id="hDelta"></div></div>
+        <div class="ov gauge">
+          <div class="shift" id="shift"></div>
+          <div class="gtop"><div class="pedals"><div class="pedal t"><i id="pT"></i></div><div class="pedal b"><i id="pB"></i></div></div>
+          <div class="gw"><svg viewBox="0 0 150 118" id="gSvg"></svg><div class="v num" id="hSpd">0</div><div class="u">KM/H</div><div class="gear num" id="hGear">N</div></div></div>
+          <div class="mini">
+            <div class="mt"><div class="k">輪胎</div><div class="v num" id="hTyre">100%</div></div>
+            <div class="mt"><div class="k">燃油</div><div class="v num" id="hFuel">–</div></div>
+            <div class="mt"><div class="k">引擎</div><div class="v num" id="hEng">–</div></div>
+          </div>
+        </div>
+        <div class="setp" id="setp"><div class="sph">目前設定<a href="#" id="editSetup">修改設計 →</a></div><div id="setupMini"></div></div>
+        <div class="idle" id="idle"><b>賽道已就緒</b><span>選擇一項測試出發。</span></div>
+        <div id="bannerHost"></div><div id="dnfHost"></div>
+        <canvas id="fxcv" class="fxcv"></canvas>
+      </div>
+      <div class="prog"><i id="prog"></i></div>
+      <div class="acts">
+        <button class="ab pri" id="runPractice"><b>▶ 練習單圈</b><small>乾地 25°C · 1 圈 · 約 10 秒</small></button>
+        <button class="ab" id="runHot"><b>🔥 高溫測試</b><small>乾地 36°C · 2 圈 · 約 17 秒</small></button>
+        <button class="ab" id="runWet"><b>🌧️ 雨天測試</b><small>雨天 18°C · 2 圈 · 約 17 秒</small></button>
+        <button class="ab doe" id="runBatch"><b>🧪 DOE 批次測試</b><small><span class="bl">剩餘 1 次</span> · <span class="hl">超過 5 組時間減半</span></small></button>
+      </div>
+    </div>
+    <div class="glass rc" id="resCard"><div class="empty">完成第一次測試後，這裡會用一句話告訴你這圈發生了什麼。</div></div>
+    <div id="batchOut"></div>
+  </section>
+
+  <section id="colR">
+    <div class="glass card">
+      <div class="ttl">測試紀錄 <small>大字 = 12 圈預測（乾地）</small></div>
+      <div class="log" id="log"><div class="empty">尚未測試</div></div>
+    </div>
+    <div class="glass card">
+      <div class="ttl">決賽提交</div>
+      <p class="hint" style="margin-top:0">提交目前的設定作為決賽設定。主持人喊停前都可以重新提交，以最後一次為準。</p>
+      <button class="sub" id="submitBtn">🏁 提交決賽設定</button>
+      <div id="subOut"></div>
+      <button class="dlsave" id="dlSave">⬇ 下載我的存檔（JSON）</button>
+    </div>
+    <div class="glass card brief">
+      <div class="ttl">賽事說明</div>
+      <ul>
+        <li>決賽共 <b>12 圈</b>，總時間最短者獲勝；以<b>最後一次提交</b>為準。</li>
+        <li>每次測試都會花賽道時間，<b>時間就是你唯一的預算</b>。</li>
+        <li>圈速含<b>車手誤差</b>（約 ±0.25 秒），差距小要重測確認。</li>
+        <li>燃油自動加足；輪胎磨完會<b>自動進站</b>（每次 +12 秒）。</li>
+        <li>進<b>髮夾彎</b>太晚煞車會鎖死、衝出彎道。</li>
+      </ul>
+      <div class="fc"><div class="e">🌤️</div><div><b>正賽天氣預報：不穩定</b><div class="hint">練習賽為乾地 25°C，正賽日不一定相同。</div></div></div>
+    </div>
+  </section>
+</main>
+
+<!-- PAGE 3 · RESULTS ANALYSIS -->
+<main class="page" id="pg-ana">
+  <div class="an-top glass"><div><div class="an-t">賽果分析</div><div class="an-s" id="anSum">完成測試後，這裡整理你所有的數據。</div></div>
+    <div class="an-nav"><a href="#" id="dlSave2">⬇ 下載存檔</a><a href="#an-runs">全部測試</a><a href="#an-fx">旋鈕效果</a><a href="#an-cmp">兩圈比較</a><a href="#an-risk">12 圈風險</a><a href="#an-lap">單圈詳細</a></div></div>
+  <section class="glass an-sec" id="an-runs"><div class="ttl">① 全部測試 <small>點欄位排序 · 點一列載入該設定</small></div><div id="runsTbl"></div></section>
+  <section class="glass an-sec" id="an-fx"><div class="ttl">② 旋鈕效果：每個設定與練習圈速的關係 <small>只用乾地練習賽 · 越低越快</small></div><div id="fxCharts"></div></section>
+  <section class="glass an-sec" id="an-cmp"><div class="ttl">③ 兩圈比較</div><div class="cmp-pick"><select id="cmpA"></select><span>vs</span><select id="cmpB"></select></div><div id="cmpOut"></div></section>
+  <section class="glass an-sec" id="an-risk"><div class="ttl">④ 目前設定的 12 圈正賽風險 <small id="riskCode"></small></div><div id="riskOut"></div></section>
+  <section class="glass an-sec ana" id="an-lap"><div class="ttl">⑤ 單圈詳細 <small id="anaTag">完成一次測試後顯示</small></div><div id="ana"><div class="empty">尚無資料。</div></div></section>
+</main>
+
+<div class="modal" id="saveAsk" style="display:none">
+  <div class="glass box">
+    <div class="logo"><i></i>CMP 大獎賽</div>
+    <h1 id="saTitle">允許自動存檔</h1>
+    <p>為了讓主持人在大螢幕看到你的成績，請選擇下面這個資料夾。只需做這一次，之後每圈都會自動存檔。</p>
+    <div class="pathbox"><div class="pl">存檔資料夾</div><code id="pathTxt"></code><button class="pill" id="copyPath">📋 複製路徑</button></div>
+    <ol class="psteps"><li>按下方紅色按鈕（路徑會<b>自動複製</b>）</li><li>在選擇視窗<b>上方的網址列</b>貼上（Ctrl+V）並按 Enter</li><li>按「選取資料夾」，再按「允許」或「檢視檔案」</li></ol>
+    <div id="saErr" class="saerr" style="display:none"></div>
+    <button class="go" id="saveYes">選擇存檔資料夾</button>
+    <div style="text-align:center;margin-top:12px"><button class="pill" id="saveLater">稍後再說</button></div>
+  </div>
+</div>
+<div class="modal" id="batchModal" style="display:none">
+  <div class="glass box bx-box">
+    <div class="bx-hd"><div><div class="logo"><i></i>DOE 批次測試</div><h1>一次測試多組設定 <small class="bxleft" id="bxLeftTxt"></small></h1>
+      <p>每一列可以<b>多選</b>。有多選的設定會自動<b>排列組合</b>（全因子實驗），其他設定固定。每組在練習賽條件跑 1 圈。</p></div>
+      <button class="pill" id="bxClose">✕</button></div>
+    <div class="bx-rows" id="bxRows"></div>
+    <div class="bx-sum" id="bxSum"></div>
+    <div class="bx-act"><button class="pill" id="bxReset">重設為目前設定</button><span style="flex:1"></span><button class="go" id="bxGo">開始批次測試 ▶</button></div>
+  </div>
+</div>
+<div class="modal" id="timeUp" style="display:none">
+  <div class="glass box" style="text-align:center">
+    <div style="font-size:64px;line-height:1">🏁</div>
+    <h1>時間到！</h1>
+    <p>主持人已結束測試時間。若還沒提交，請立刻提交你的決賽設定（以最後一次提交為準）。</p>
+    <button class="go" id="tuSubmit">提交目前設定 <span class="num" id="tuCode"></span></button>
+    <div style="margin-top:12px"><button class="pill" id="tuClose">知道了</button></div>
+  </div>
+</div>
+<div class="modal" id="welcome" style="display:none">
+  <div class="glass box">
+    <div class="logo"><i></i>CMP 大獎賽</div>
+    <h1>歡迎來到車庫</h1>
+    <p>你是這台賽車的工程師。燃油與進站由車隊自動處理，你只要專心把車調快、調穩。</p>
+    <div class="steps"><div><i>1</i><b>設計</b><span>調整 5 個設定，每個都有好處與代價</span></div><div><i>2</i><b>測試</b><span>上賽道跑一圈，測試花的是真實時間</span></div><div><i>3</i><b>提交</b><span>主持人喊停前，提交決賽設定參加 12 圈大獎賽</span></div></div>
+    <div class="fld"><label>姓名（會顯示在大螢幕）</label><input id="inName" maxlength="16" placeholder="例如：王小明"></div>
+    <div class="fld" id="idFld"><label>工號</label><input id="inId" maxlength="12" placeholder="例如：120345"></div>
+    <button class="go" id="startBtn">進入車庫 →</button>
+  </div>
+</div>
+
+/*__THREE__*/
+/*__SIM__*/
+<script>
+(function(){
+var KEY='cmpgp_garage_v5', TSC={practice:5.3,hot:5.5,wet:7.4}, AI_SECONDS=10, T=SIM.TRACK;
+var st=load()||{name:'',id:'',runs:[],params:SIM.sanitize(SIM.DEFAULT),final:null,aiLog:[],aiUsed:0,trackSec:0};
+var $=function(i){return document.getElementById(i)};
+var NOID=false;/* build sets true for the public (GitHub) copy: players enter a name only */
+if(NOID){var _f=document.getElementById('idFld');if(_f)_f.style.display='none'}
+var busy=false, sel=null, dirHandle=null, folderState='none', LASTERR='', CMODE=false;/* CMODE: cloud reachable → save there, no folder needed */
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+function load(){try{var s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
+function toast(m){var t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2600)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function mmss(s){s=Math.round(s);return Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
+function ft(t,d){if(t==null||!isFinite(t))return '—';d=d==null?3:d;var m=Math.floor(t/60),s=t-m*60;return m+':'+(s<10?'0':'')+s.toFixed(d)}
+function sg(x,d){return (x<0?'−':'+')+Math.abs(x).toFixed(d==null?3:d)}
+var SN=SIM.SECTORS.map(function(s){return s.name}), SC=T.SCOL;
+var CONDN={practice:'☀️ 練習賽 · 乾地 25°C',hot:'🔥 高溫測試 · 乾地 36°C',wet:'🌧️ 雨天測試 · 雨天 18°C'};
+var CICON={practice:'☀️',hot:'🔥',wet:'🌧️'};
+
+/* ---------------- shared folder (File System Access API) ---------------- */
+function idb(){return new Promise(function(res,rej){var r=indexedDB.open('cmpgp',1);r.onupgradeneeded=function(){r.result.createObjectStore('h')};r.onsuccess=function(){res(r.result)};r.onerror=function(){rej(r.error)}})}
+function idbGet(k){return idb().then(function(db){return new Promise(function(res){var q=db.transaction('h').objectStore('h').get(k);q.onsuccess=function(){res(q.result)};q.onerror=function(){res(null)}})}).catch(function(){return null})}
+function idbSet(k,v){return idb().then(function(db){return new Promise(function(res){var tx=db.transaction('h','readwrite');tx.objectStore('h').put(v,k);tx.oncomplete=res;tx.onerror=res})}).catch(function(){})}
+function setFolder(state,name){folderState=state;var c=$('folderChip');c.classList.toggle('ok',state==='ok');c.classList.toggle('warn',state!=='ok');
+  if(CMODE){$('folderTxt').textContent=state==='ok'?'☁ 已連線雲端':'☁ 同步失敗 · 點此重試';return}
+  $('folderTxt').textContent=state==='ok'?('已連線 · '+name):state==='relink'?'點此重新連線資料夾':state==='err'?'存檔失敗 · 點此重試':'未連接資料夾';
+}
+var SUBMIT_PATH='\\\\server\\share\\Submission';
+var SUBMIT_NAME='Submission';
+function saErr(m){var e=$('saErr');if(!m){e.style.display='none';return}e.innerHTML=m;e.style.display=''}
+async function pickFolder(){
+  if(!window.showDirectoryPicker){saErr('此瀏覽器不支援資料夾存取，請改用 Chrome 或 Edge。');return false}
+  var h;
+  try{var o={id:'cmpgp',mode:'readwrite'};if(dirHandle)o.startIn=dirHandle;h=await window.showDirectoryPicker(o)}
+  catch(e){if(e&&e.name==='AbortError')return false;saErr('無法開啟資料夾（'+esc(e&&e.name||'錯誤')+'）。這台電腦可能限制網頁存取資料夾，請通知主持人。');return false}
+  if(h.name.toLowerCase()!==SUBMIT_NAME.toLowerCase()&&!confirm('你選的是「'+h.name+'」，不是「'+SUBMIT_NAME+'」。\n確定要存到這個資料夾嗎？'))return false;
+  try{if(h.requestPermission&&await h.requestPermission({mode:'readwrite'})!=='granted'){saErr('沒有取得寫入權限，請再試一次並按「允許」。');return false}}catch(e){}
+  dirHandle=h;FH.h=null;await idbSet('dir',h);setFolder('ok',h.name);
+  var ok=false;try{ok=await createBlank()}catch(e){LASTERR=(e&&(e.name+(e.message?': '+e.message:'')))||''}
+  if(ok&&st.runs.length)ok=await writeFile();
+  if(!ok){saErr('已選擇資料夾，但<b>無法寫入檔案</b>'+(LASTERR?'（'+esc(LASTERR)+'）':'')+'。這台電腦的瀏覽器可能禁止網頁存檔，請通知主持人。');return false}
+  saErr(null);return true;
+}
+async function relink(){
+  if(!dirHandle)return pickFolder();
+  try{var p=await dirHandle.requestPermission({mode:'readwrite'});if(p==='granted'){setFolder('ok',dirHandle.name);try{await createBlank()}catch(e){}await writeFile();return true}}catch(e){}
+  return pickFolder();
+}
+function openSaveAsk(afterLogin){if(afterLogin&&typeof afterLogin!=='boolean')afterLogin=false;saErr(null);$('pathTxt').textContent=SUBMIT_PATH;$('saTitle').textContent=folderState==='ok'?'更換存檔資料夾':folderState==='relink'?'重新連線資料夾':'允許自動存檔';
+  $('saveYes').textContent=folderState==='ok'?'重新選擇資料夾':folderState==='relink'?'重新允許存檔（一鍵）':'選擇存檔資料夾';$('saveLater').textContent=folderState==='ok'?(afterLogin?'✓ 沿用此資料夾':'取消'):'稍後再說';
+  if(folderState==='ok'&&dirHandle)saErr('<span style="color:#7ee2a0">目前已連線：<b>'+esc(dirHandle.name)+'</b>。若正確，按下方「沿用此資料夾」即可。</span>');
+  if(!window.showDirectoryPicker)saErr('此瀏覽器無法選擇資料夾。請確認是用主持人提供的網址（http://localhost…）在 Chrome 或 Edge 開啟，或通知主持人。');
+  $('saveAsk').style.display='flex'}
+$('folderChip').onclick=function(){if(CMODE){cloudSave().then(function(ok){toast(ok?'已同步到雲端 ✓':'雲端暫時連不上，會自動重試')});return}openSaveAsk()};
+$('copyPath').onclick=function(){var t=SUBMIT_PATH,done=function(){toast('已複製路徑，到選擇視窗的網址列貼上')};
+  function fb(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){toast('請手動選取並複製路徑')}a.remove()}
+  try{navigator.clipboard.writeText(t).then(done,fb)}catch(e){fb()}};
+(async function(){var h=await idbGet('dir');if(!h)return;dirHandle=h;try{var p=await h.queryPermission({mode:'readwrite'});setFolder(p==='granted'?'ok':'relink',h.name)}catch(e){setFolder('relink',h.name)}})();
+function fileName(){return 'CMPGP_'+(st.id||'x').replace(/[^A-Za-z0-9_-]/g,'')+'.json'}
+/* same content as the file saved to the shared folder (CMPGP_<工號>.json) */
+function dlSave(quiet){if(!st.id){toast('請先輸入姓名與工號');return}var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload(),null,2)],{type:'application/json'}));a.download=fileName();document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);if(!quiet)toast('已下載 '+fileName()+'（'+st.runs.length+' 次測試）')}
+function payload(){
+  var pb=pbRun();
+  var body={v:3,player:{id:st.id,name:st.name},
+    runs:st.runs.map(function(r){return {n:r.n,c:r.cond,code:r.code,p:r.params,b:r.best!=null?+r.best.toFixed(3):null,s:r.s?r.s.map(function(x){return +x.toFixed(3)}):null,dnf:r.dnf?r.dnf.reason:null,at:r.t}}),
+    final:st.final,
+    stats:{runs:st.runs.length,practice:st.runs.filter(function(r){return r.cond==='practice'}).length,stress:st.runs.filter(function(r){return r.cond!=='practice'}).length,
+      testSeconds:Math.round(st.trackSec||0),aiUsed:st.aiUsed||0,batches:st.batches||0,batchRuns:st.runs.filter(function(r){return r.batch}).length,aiAdopted:false,
+      bestPractice:pb?+pb.best.toFixed(3):null,testedFinal:!!(st.final&&st.runs.some(function(r){return r.code===st.final.code}))},
+    updatedAt:new Date().toISOString()};
+  body.check=SIM.checksum(body);return body;
+}
+/* network-drive safe: one file per player, retries with random back-off (80 people saving at once),
+   a failed save is queued and retried in the background instead of silently stopping */
+var WR={busy:false,again:false,fails:0,timer:null};
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+/* one file per player: created (blank) as soon as the folder is chosen, then overwritten after every test.
+   The file handle is cached so later saves skip the directory lookup on the network drive. */
+var FH={h:null,name:'',dir:null};
+async function playerFile(create){if(FH.h&&FH.name===fileName()&&FH.dir===dirHandle)return FH.h;var h=await dirHandle.getFileHandle(fileName(),{create:!!create});FH={h:h,name:fileName(),dir:dirHandle};return h}
+async function writeOnce(){var fh;try{fh=await playerFile(true)}catch(e){FH.h=null;throw e}
+  try{var w=await fh.createWritable({keepExistingData:false});await w.write(JSON.stringify(payload()));await w.close()}catch(e){FH.h=null;throw e}}
+async function createBlank(){/* blank record: player only, no runs yet */
+  var fh=await playerFile(true),f=null;try{f=await fh.getFile()}catch(e){}
+  if(f&&f.size>0&&st.runs.length===0){try{var o=JSON.parse(await f.text());if(o&&o.runs&&o.runs.length)return true}catch(e){}}
+  var w=await fh.createWritable({keepExistingData:false});await w.write(JSON.stringify(payload()));await w.close();return true}
+/* cloud save: same payload as the folder file; retries with back-off, never blocks the game */
+var CW={busy:false,again:false,timer:null};
+async function cloudSave(){if(!st.id)return false;if(CW.busy){CW.again=true;return true}CW.busy=true;var ok=false;
+  for(var a=0;a<3&&!ok;a++){try{await CLOUD.putPlayer(st.id,st.name,payload());ok=true}catch(e){LASTERR=String(e&&e.message||e);await sleep(500+Math.random()*1200*(a+1))}}
+  CW.busy=false;clearTimeout(CW.timer);
+  if(ok){setFolder('ok','雲端');if(CW.again){CW.again=false;return cloudSave()}return true}
+  setFolder('err','雲端');CW.timer=setTimeout(cloudSave,8000+Math.random()*6000);return false}
+/* try the cloud once; on success the folder flow is skipped entirely */
+async function cloudLink(){if(!CLOUD.on||!st.id)return false;try{await CLOUD.putPlayer(st.id,st.name,payload(),4000);CMODE=true;setFolder('ok','雲端');return true}catch(e){LASTERR=String(e&&e.message||e);return false}}
+async function writeFile(){
+  if(CMODE)return cloudSave();
+  if(!dirHandle||!st.id||(folderState!=='ok'&&folderState!=='err'))return false;
+  if(WR.busy){WR.again=true;return true}
+  WR.busy=true;var ok=false;
+  for(var a=0;a<4&&!ok;a++){try{await writeOnce();ok=true}catch(e){LASTERR=(e&&(e.name+(e.message?': '+e.message:'')))||'';
+    if(e&&(e.name==='NotAllowedError'||e.name==='SecurityError')){try{if(await dirHandle.queryPermission({mode:'readwrite'})!=='granted'){WR.busy=false;setFolder('relink',dirHandle.name);return false}}catch(x){}}
+    await sleep(400+Math.random()*900*(a+1))}}
+  WR.busy=false;
+  if(ok){WR.fails=0;if(folderState!=='ok')setFolder('ok',dirHandle.name);clearTimeout(WR.timer);if(WR.again){WR.again=false;return writeFile()}return true}
+  WR.fails++;if(WR.fails>=2)setFolder('err',dirHandle.name);
+  clearTimeout(WR.timer);WR.timer=setTimeout(writeFile,8000+Math.random()*7000);return false
+}
+
+function askSaveOnce(){if(CMODE)return;if(folderState==='ok'||!window.showDirectoryPicker)return;if(st.askedSave&&folderState!=='relink'&&folderState!=='err')return;st.askedSave=true;save();
+  openSaveAsk()}
+function copyPathSilent(){var t=SUBMIT_PATH;/* must run inside the click, before the folder picker opens */
+  try{var a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.cssText='position:fixed;left:-9999px;top:0';document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}catch(e){}
+  try{if(navigator.clipboard)navigator.clipboard.writeText(t).catch(function(){})}catch(e){}}
+$('saveYes').onclick=async function(){copyPathSilent();if(folderState!=='relink')toast('路徑已複製 ✓ 在視窗上方網址列按 Ctrl+V，再按 Enter');var ok=folderState==='relink'?await relink():await pickFolder();if(ok){$('saveAsk').style.display='none';toast('已連線「'+dirHandle.name+'」，之後每圈自動存檔 ✓');SFX.ui('confirm')}};
+$('saveLater').onclick=function(){var was=folderState;$('saveAsk').style.display='none';if(was==='ok')writeFile();if(was!=='ok')toast('隨時可點右上角「未連接資料夾」完成設定')};
+/* ---------------- host countdown (read from CMPGP-CONTROL.json in the shared folder) ---------------- */
+var CTL={data:null,shownOver:false};
+async function readControl(){
+  if(CMODE){try{var c=await CLOUD.control();if(c&&c.v===1)CTL.data=c}catch(e){}return}
+  if(!dirHandle||folderState!=='ok')return;
+  try{var fh=await dirHandle.getFileHandle('CMPGP-CONTROL.json');var f=await fh.getFile();var o=JSON.parse(await f.text());if(o&&o.v===1)CTL.data=o}catch(e){}
+}
+function cdLeft(){var o=CTL.data;if(!o)return null;if(o.over)return 0;if(o.running&&o.deadline)return Math.max(0,(o.deadline-Date.now())/1000);return o.left}
+function renderCd(){var o=CTL.data,c=$('cdChip');if(!o){c.style.display='none';return}var l=cdLeft();c.style.display='';
+  var m=Math.floor(Math.ceil(l)/60),ss=('0'+Math.ceil(l)%60).slice(-2);
+  c.className='chip cd'+(l<=0?' over':l<=60?' warn':'');
+  c.innerHTML=l<=0?'🏁 <b>時間到</b>':(o.running?'⏱ 剩餘 ':(o.full&&l>=o.full-0.5?'⏳ 即將開始 ':'⏸ 暫停 '))+'<b class="num">'+m+':'+ss+'</b>';
+  if(l<=0&&!CTL.shownOver&&(o.running||o.over)){CTL.shownOver=true;$('tuCode').textContent=SIM.code(st.params);$('timeUp').style.display='flex';SFX.alert('time')}
+  if(l>0)CTL.shownOver=false}
+setInterval(function(){readControl().then(renderCd)},5000);setInterval(renderCd,1000);
+$('dlSave').onclick=function(){dlSave()};$('dlSave2').onclick=function(e){e.preventDefault();dlSave()};
+$('tuClose').onclick=function(){$('timeUp').style.display='none'};
+$('tuSubmit').onclick=function(){$('timeUp').style.display='none';$('submitBtn').click()};
+/* ---------------- sound ---------------- */
+SFX.noEngine(true); /* garage: no engine loop, same effects palette as Race Control */
+function sndUI(){$('sndChip').textContent=SFX.isOn()?'🔊':'🔇'}sndUI();
+$('sndChip').onclick=function(){SFX.setOn(!SFX.isOn());sndUI();if(SFX.isOn())SFX.ui('click')};
+/* ---------------- welcome ---------------- */
+function showWelcome(){$('welcome').style.display='flex';$('inName').value=st.name||'';$('inId').value=st.id||'';setTimeout(function(){$('inName').focus()},50)}
+$('startBtn').onclick=async function(){
+  var n=$('inName').value.trim(),i=$('inId').value.trim();
+  if(!n){$('inName').focus();toast('請輸入姓名');return}
+  if(NOID)i=st.id||('P'+Date.now().toString(36).slice(-4)+Math.random().toString(36).slice(2,6)).toUpperCase();/* name-only version: hidden random player code */
+  if(!i){$('inId').focus();toast('請輸入工號');return}
+  st.name=n;st.id=i;save();
+  $('welcome').style.display='none';renderAll();
+  if(await cloudLink()){toast('已連線雲端 ☁ 每圈自動存檔');return}
+  setTimeout(function(){openSaveAsk(true)},200);
+};
+['inName','inId'].forEach(function(k){$(k).addEventListener('keydown',function(e){if(e.key==='Enter')$('startBtn').click()})});
+if(st.id)cloudLink();
+/* phones: 目前設定 sits under the track instead of on top of it */
+(function(){var mq=window.matchMedia&&matchMedia('(max-width:760px)');function place(){var sp=$('setp'),tw=document.querySelector('.tw');if(!sp||!tw)return;if(mq&&mq.matches){if(sp.parentNode===tw)tw.parentNode.insertBefore(sp,tw.nextSibling)}else if(sp.parentNode!==tw)tw.appendChild(sp)}place();if(mq&&mq.addEventListener)mq.addEventListener('change',place)})();
+
+/* ---------------- setup ---------------- */
+function lastRun(){return st.runs[st.runs.length-1]}
+/* ---------------- page switching ---------------- */
+var PAGE='design',CAR=null;
+/* keep the track alive while idle: the light pulse keeps lapping (≈30 fps, only on the test page, never during a run) */
+(function idleLoop(){var last=0;(function f(ts){requestAnimationFrame(f);if(busy||PAGE!=='test'||document.hidden||ts-last<33)return;last=ts;try{draw()}catch(e){}})(0)})();
+function showPage(p){if(PAGE!==p)SFX.ui('whoosh');PAGE=p;if(p==='ana')setTimeout(renderAnaPage,10);
+  document.querySelectorAll('.page').forEach(function(el){el.classList.toggle('on',el.id==='pg-'+p)});
+  $('pages').querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.p===p)});
+  if(p==='design'){if(CAR){CAR.resume();CAR.resize()}}else{if(CAR)CAR.pause();if(p==='test')setTimeout(function(){fit();draw();placeTags()},20)}
+  window.scrollTo(0,0);
+}
+$('pages').querySelectorAll('button').forEach(function(b){b.onclick=function(){if(busy&&b.dataset.p==='design'){toast('測試進行中，完成後再修改設計');return}showPage(b.dataset.p)}});
+$('toTest').onclick=function(){showPage('test')};
+$('editSetup').onclick=function(e){e.preventDefault();if(busy){toast('測試進行中，完成後再修改設計');return}showPage('design')};
+
+/* ---------------- parameter blocks (drum pickers) ---------------- */
+var PCOL={rw:'#5ac8fa',eng:'#ff375f',susp:'#ffd60a',brk:'#ff9f0a',tire:'#30d158'},PICO={rw:'🪽',eng:'⚙️',susp:'🛞',brk:'🛑',tire:'●'};
+var PSHORT={rw:'下壓力',eng:'引擎模式',susp:'懸吊硬度',brk:'煞車點',tire:'輪胎配方'};
+function pvals(d){if(d.options)return d.options;var a=[];for(var v=d.min;v<=d.max;v+=d.step)a.push(v);return a}
+function plabel(d,v){return d.k==='tire'?'<span class="tdot" style="background:'+SIM.TIRES[v].color+'"></span>'+SIM.TIRES[v].name:String(v)}
+function buildParams(){
+  $('params').innerHTML=SIM.PARAMS.map(function(d){
+    return '<div class="glass blk" tabindex="0" data-k="'+d.k+'" style="--c:'+PCOL[d.k]+'">'+
+      '<div class="hd"><span class="ic">'+(d.k==='tire'?'<span style="color:'+PCOL.tire+'">●</span>':PICO[d.k])+'</span><b>'+PSHORT[d.k]+'</b><span class="chg" id="c_'+d.k+'" style="display:none">已調整</span></div>'+
+      '<div class="drum"><button class="arw" data-dir="-1" aria-label="減少">◀</button><div class="reel'+(d.options?' tx':'')+'" id="reel_'+d.k+'"></div><button class="arw" data-dir="1" aria-label="增加">▶</button></div>'+
+      (d.options?'':'<div class="ticks" id="tk_'+d.k+'"></div><div class="ends2"><span>'+d.lo+'</span><span>'+d.hi+'</span></div>')+
+      '<div class="pc" id="pc_'+d.k+'"></div></div>';
+  }).join('');
+  $('params').querySelectorAll('.blk').forEach(function(el){
+    var k=el.dataset.k;
+    el.querySelectorAll('.arw').forEach(function(b){b.onclick=function(){step(k,+b.dataset.dir)}});
+    el.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowUp'){e.preventDefault();step(k,1)}if(e.key==='ArrowLeft'||e.key==='ArrowDown'){e.preventDefault();step(k,-1)}});
+    el.addEventListener('focus',function(){hot(k)});el.addEventListener('mouseenter',function(){hot(k)});el.addEventListener('mouseleave',function(){hot(null)});
+  });
+}
+var HOT=null;function hot(k){HOT=k;document.querySelectorAll('.lbl').forEach(function(l){l.classList.toggle('hot',l.dataset.k===k)})}
+function step(k,dir){
+  var d=SIM.PARAMS.filter(function(x){return x.k===k})[0],vals=pvals(d),i=vals.indexOf(st.params[k]);
+  var ni=Math.max(0,Math.min(vals.length-1,i+dir));if(ni===i)return;
+  st.params[k]=vals[ni];onParam();hot(k);SFX.ui('tick');if(k==='eng'&&PAGE==='design')SFX.rev(vals[ni]);var l=document.querySelector('.lbl[data-k="'+k+'"]');if(l){l.animate([{transform:'translate(-50%,-50%) scale(1.12)'},{transform:'translate(-50%,-50%) scale(1)'}],{duration:350,easing:'cubic-bezier(.2,1.4,.4,1)'})}
+}
+function setTo(k,v){st.params[k]=v;onParam();hot(k);SFX.ui('tick')}
+function onParam(){st.params=SIM.sanitize(st.params);save();renderSetup()}
+function renderSetup(){
+  var p=st.params,lr=lastRun();
+  SIM.PARAMS.forEach(function(d){
+    var vals=pvals(d),i=vals.indexOf(p[d.k]),h='';
+    for(var o=-2;o<=2;o++){var v=vals[i+o],cls=o===0?'c':Math.abs(o)===1?'n1':'n2';h+=v==null?'<span class="'+cls+' e">·</span>':'<span class="'+cls+'" data-v="'+v+'">'+plabel(d,v)+'</span>'}
+    var reel=$('reel_'+d.k);reel.innerHTML=h;
+    reel.querySelectorAll('span[data-v]').forEach(function(s){if(!s.classList.contains('c'))s.onclick=function(){var v=s.dataset.v;setTo(d.k,d.options?v:+v)}});
+    var blk=reel.closest('.blk');blk.querySelector('[data-dir="-1"]').disabled=i<=0;blk.querySelector('[data-dir="1"]').disabled=i>=vals.length-1;
+    if(!d.options)$('tk_'+d.k).innerHTML=vals.map(function(v){return '<i class="'+(v<=p[d.k]?'on':'')+'"></i>'}).join('');
+    var pc=d.options?d.info[p[d.k]]:[d.up,d.down];
+    $('pc_'+d.k).innerHTML='<div class="u">'+(d.options?'':'調高：')+pc[0]+'</div><div class="d">'+(d.options?'':'代價：')+pc[1]+'</div>'+(d.k==='tire'?'<div class="n">輪胎撐不過下一圈時自動進站（+'+SIM.PIT_LOSS+' 秒）</div>':'');
+    $('c_'+d.k).style.display=lr&&String(lr.params[d.k])!==String(p[d.k])?'':'none';
+  });
+  $('codeBox').textContent=SIM.code(p);
+  $('setupTag').textContent=lr&&lr.code===SIM.code(p)?'與上次測試相同':(st.runs.some(function(r){return r.code===SIM.code(p)})?'曾測試過':'尚未測試');
+  $('setupMini').innerHTML=SIM.PARAMS.map(function(d){if(d.k==='tire')return '<div class="sq t" style="--c:'+PCOL.tire+'"><span class="k">'+PSHORT[d.k]+'</span><span class="v">● '+SIM.TIRES[p.tire].name+'</span></div>';
+    var b='';for(var v=d.min;v<=d.max;v++)b+='<i'+(v<=p[d.k]?' class="on"':'')+'></i>';
+    return '<div class="sq" style="--c:'+PCOL[d.k]+'"><span class="k">'+PSHORT[d.k]+'</span><span class="v num">'+p[d.k]+'</span><span class="b">'+b+'</span></div>'}).join('')+'<div class="code num">'+SIM.code(p)+'</div>';
+  if(CAR)CAR.setParams(p);
+  renderLabels();
+}
+/* ---------------- 3D stage + floating labels ---------------- */
+var LOFF={rw:[-110,-90],eng:[0,-125],susp:[130,-95],brk:[120,80],tire:[-60,105]},LPOS=null;
+function renderLabels(){
+  var p=st.params;
+  $('lblLayer').innerHTML=SIM.PARAMS.map(function(d){var v=d.k==='tire'?'<span class="tdot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:'+SIM.TIRES[p.tire].color+'"></span>'+SIM.TIRES[p.tire].name:p[d.k]+'<small>/ '+d.max+'</small>';
+    var bar=d.options?'':'<div class="bar">'+pvals(d).map(function(x){return '<i class="'+(x<=p[d.k]?'on':'')+'"></i>'}).join('')+'</div>';
+    return '<div class="lbl'+(HOT===d.k?' hot':'')+'" data-k="'+d.k+'" style="--c:'+PCOL[d.k]+'"><div class="k">'+PSHORT[d.k]+'</div><div class="v num">'+v+'</div>'+bar+'</div>'}).join('');
+  $('lblLayer').querySelectorAll('.lbl').forEach(function(l){l.onclick=function(){var b=document.querySelector('.blk[data-k="'+l.dataset.k+'"]');b.focus();b.scrollIntoView({block:'nearest',behavior:'smooth'})}});
+  if(LPOS)placeLabels(LPOS);
+}
+function placeLabels(a){
+  LPOS=a;var stg=$('c3d').getBoundingClientRect(),W=stg.width,H=stg.height,svg='';
+  document.querySelectorAll('.lbl').forEach(function(l){var k=l.dataset.k,p=a[k];if(!p)return;var o=LOFF[k],x=Math.max(80,Math.min(W-80,p.x+o[0])),y=Math.max(60,Math.min(H-60,p.y+o[1]));
+    l.style.left=x+'px';l.style.top=y+'px';
+    svg+='<line x1="'+p.x+'" y1="'+p.y+'" x2="'+x+'" y2="'+y+'" stroke="'+PCOL[k]+'" stroke-width="1.2" stroke-opacity=".7"/><circle cx="'+p.x+'" cy="'+p.y+'" r="4" fill="'+PCOL[k]+'"/><circle cx="'+p.x+'" cy="'+p.y+'" r="9" fill="none" stroke="'+PCOL[k]+'" stroke-opacity=".4"/>'});
+  $('lblLines').innerHTML=svg;
+}
+function init3D(){
+  try{if(!window.THREE)throw 0;CAR=CAR3D.create($('c3d'),placeLabels);CAR.setParams(st.params)}
+  catch(e){CAR=null;$('c3d').style.display='none';$('lblLayer').style.display='none';$('lblLines').style.display='none';
+    /* 2D fallback: big top-down car + note */
+    var c2=document.createElement('canvas');c2.style.cssText='position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:min(80%,560px);aspect-ratio:2/1';document.querySelector('.stage3d').appendChild(c2);
+    var d=window.devicePixelRatio||1;c2.width=560*d;c2.height=280*d;var x=c2.getContext('2d');x.scale(d,d);SIM.TRACK.car(x,280,140,-Math.PI/2+Math.PI/2,'#ff375f',1,null,11);
+    var n=document.createElement('div');n.className='st-h';n.style.cssText='position:absolute;left:50%;bottom:90px;transform:translateX(-50%);text-align:center';n.textContent='此電腦未啟用 3D 顯示，已切換為平面模式，所有功能照常使用。';document.querySelector('.stage3d').appendChild(n)}
+}
+
+/* ---------------- track canvas ---------------- */
+var cv=$('cv'),ctx=cv.getContext('2d'),VIEW={cond:null,frac:0.001,active:-1,car:true},trail=[],drops=[];
+function fit(){var d=window.devicePixelRatio||1;cv.width=Math.max(1,cv.offsetWidth*d);cv.height=Math.max(1,cv.offsetHeight*d)}/* offset size: the tilted canvas' bounding rect is the projected box */
+window.addEventListener('resize',function(){if(PAGE==='test'){fit();draw();placeTags()}});
+
+/* 2.5D: the track canvas is tilted with CSS 3D; this maps a point on the flat canvas (CSS px) to where it shows on screen */
+function tiltPt(el,x,y){var cs=getComputedStyle(el);if(!cs.transform||cs.transform==='none')return [x,y];var m=new DOMMatrix(cs.transform),o=cs.transformOrigin.split(' ').map(parseFloat),q=m.transformPoint(new DOMPoint(x-o[0],y-o[1],0,1));return [q.x/q.w+o[0]+el.offsetLeft,q.y/q.w+o[1]+el.offsetTop]}
+function view(){var W=cv.width,H=cv.height,d=window.devicePixelRatio||1,nar=W<700*d,aw=W-(nar?16:340)*d,ah=H-80*d,s=Math.min(aw/950,ah/590);return {s:s,ox:(nar?8:60)*d-60*s+(aw-950*s)/2,oy:56*d-85*s+(ah-590*s)/2}}
+var TCACHE={cv:document.createElement('canvas'),key:''};
+function draw(){
+  var W=cv.width,H=cv.height,v=view();ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,W,H);
+  var c=VIEW.cond,key=W+'|'+H+'|'+(c&&c.id)+'|'+VIEW.active;
+  if(key!==TCACHE.key){TCACHE.key=key;TCACHE.cv.width=W;TCACHE.cv.height=H;var x=TCACHE.cv.getContext('2d');x.setTransform(v.s,0,0,v.s,v.ox,v.oy);T.draw(x,{floor:false,wet:c&&c.id==='wet',hot:c&&c.id==='hot',active:VIEW.active,labels:false})}
+  ctx.drawImage(TCACHE.cv,0,0);
+  ctx.setTransform(v.s,0,0,v.s,v.ox,v.oy);T.pulse(ctx,performance.now()/1000);
+  FX.draw(ctx,0);
+  if(VIEW.car&&trail.length>1)T.trail(ctx,trail.concat([T.at(VIEW.frac)]),'#ff375f',1.2);
+  if(VIEW.car){var p=T.at(VIEW.frac);T.car(ctx,p[0],p[1],p[2],'#ff375f',VIEW.dnf&&!busy?0.55:1,null,1.25);FX.draw(ctx,1);drawDnf(ctx);
+    var co=VIEW.callout;if(co){var age=(performance.now()-co.t0)/1000;if(age>2.8)VIEW.callout=null;else{var info=EVTXT[co.e],al=age<0.15?age/0.15:age>2.3?(2.8-age)/0.5:1;
+      var dx=600-p[0],dy=360-p[1],dn=Math.hypot(dx,dy)||1,ux=dx/dn,uy=dy/dn,lx=p[0]+ux*110,ly=p[1]+uy*90;
+      ctx.save();ctx.globalAlpha=al;
+      var pr=18+8*Math.abs(Math.sin(age*6));ctx.beginPath();ctx.arc(p[0],p[1],pr,0,7);ctx.strokeStyle=info[2];ctx.lineWidth=2.5;ctx.shadowColor=info[2];ctx.shadowBlur=14;ctx.stroke();
+      ctx.shadowBlur=0;
+      ctx.font='600 17px -apple-system,"PingFang TC","Microsoft JhengHei",sans-serif';var w1=ctx.measureText(info[0]).width;ctx.font='500 13px -apple-system,"PingFang TC","Microsoft JhengHei",sans-serif';var w2=ctx.measureText(info[1]).width;
+      var bw=Math.max(w1,w2)+28,bh=52,bx=lx-(ux<0?bw:0),by=ly-bh/2;bx=Math.max(170,Math.min(1000-bw,bx));by=Math.max(70,Math.min(600-bh,by));lx=Math.max(bx,Math.min(bx+bw,lx));ly=Math.max(by,Math.min(by+bh,ly));
+      ctx.restore()}}}
+  ctx.setTransform(1,0,0,1,0,0);
+  if(c&&c.id==='wet'){while(drops.length<160)drops.push([Math.random()*W,Math.random()*H,6+Math.random()*10]);ctx.strokeStyle='rgba(170,210,255,.22)';ctx.lineWidth=1;ctx.beginPath();
+    drops.forEach(function(d){ctx.moveTo(d[0],d[1]);ctx.lineTo(d[0]-1.5,d[1]+d[2]);d[1]+=d[2]*1.4;if(d[1]>H){d[1]=-10;d[0]=Math.random()*W}});ctx.stroke()}
+}
+var DNFF={'Engine failure':0.07,'Tyre failure':null,'Out of fuel':0.489},DNFHINT={'Engine failure':'引擎模式太高、溫度過熱','Tyre failure':'輪胎磨耗到底（煞車太晚或配方太軟）','Out of fuel':'燃油不足'};
+function dnfFrac(reason){var f=DNFF[reason];return f==null?T.SB[2]+0.03:f}
+function showDnf(r){if(!r||!r.dnf){$('dnfHost').innerHTML='';VIEW.dnf=null;return}
+  var rs=SIM.REASON[r.dnf.reason]||r.dnf.reason;VIEW.dnf={frac:dnfFrac(r.dnf.reason),reason:rs};
+  $('dnfHost').innerHTML='<div class="dnfcard"><div class="fl">🏳️</div><div><div class="t1">退賽<small>DNF</small></div><div class="t2">'+rs+' · 第 '+r.dnf.lap+' 圈'+(DNFHINT[r.dnf.reason]?' · '+DNFHINT[r.dnf.reason]:'')+'</div></div></div>'}
+function drawDnf(ctx){var d=VIEW.dnf;if(!d)return;var p=T.at(d.frac),x=p[0],y=p[1];
+  ctx.save();var g=ctx.createRadialGradient(x,y,2,x,y,34);g.addColorStop(0,'rgba(255,55,95,.45)');g.addColorStop(1,'rgba(255,55,95,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,34,0,7);ctx.fill();
+  ctx.beginPath();ctx.arc(x,y,13,0,7);ctx.strokeStyle='#ff375f';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='700 15px -apple-system,"PingFang TC","Microsoft JhengHei",sans-serif';var lbl='✕ 退賽 · '+d.reason,w=ctx.measureText(lbl).width+20,lx=x-w/2,ly=y-48;
+  ctx.fillStyle='rgba(60,6,16,.92)';ctx.strokeStyle='rgba(255,90,120,.8)';ctx.lineWidth=1.2;ctx.beginPath();if(ctx.roundRect)ctx.roundRect(lx,ly,w,27,9);else ctx.rect(lx,ly,w,27);ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x,ly+27);ctx.lineTo(x,y-13);ctx.stroke();
+  ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(lbl,x,ly+19);ctx.textAlign='left';ctx.restore()}
+function banner(t,glow){var h=$('bannerHost');h.innerHTML='<div class="banner" style="--glow:'+(glow||'rgba(255,255,255,.1)')+'">'+t+'</div>';clearTimeout(banner.t);banner.t=setTimeout(function(){h.innerHTML=''},2600)}
+function gauge(v){
+  var max=360,a0=Math.PI*0.8,a1=Math.PI*2.2,u=Math.max(0,Math.min(1,v/max)),cx=75,cy=72,r=58;
+  function arc(f0,f1){var s0=a0+(a1-a0)*f0,s1=a0+(a1-a0)*f1;return 'M'+(cx+r*Math.cos(s0))+' '+(cy+r*Math.sin(s0))+' A'+r+' '+r+' 0 '+((s1-s0)>Math.PI?1:0)+' 1 '+(cx+r*Math.cos(s1))+' '+(cy+r*Math.sin(s1))}
+  var g='<path d="'+arc(0,1)+'" stroke="rgba(255,255,255,.1)" stroke-width="7" fill="none" stroke-linecap="round"/>';
+  if(u>0.002)g+='<path d="'+arc(0,u)+'" stroke="url(#gg)" stroke-width="7" fill="none" stroke-linecap="round"/>';
+  $('gSvg').innerHTML='<defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#5ac8fa"/><stop offset=".7" stop-color="#bf5af2"/><stop offset="1" stop-color="#ff375f"/></linearGradient></defs>'+g;
+  $('hSpd').textContent=Math.round(v);
+}
+
+/* ---------------- race FX (lights, particles, shift lights, onboard, finish) ---------------- */
+var FX=(function(){
+  var P=[],last=0,OBC={cv:document.createElement('canvas'),key:''},SCALE=2.2;
+  $('shift').innerHTML=new Array(16).join('<i></i>');
+  var LEDS=[].slice.call($('shift').children);
+  function add(o){if(P.length<420)P.push(o)}
+  function smoke(x,y,n,col,sz){for(var i=0;i<n;i++)add({k:'s',x:x+(Math.random()-.5)*6,y:y+(Math.random()-.5)*6,vx:(Math.random()-.5)*22,vy:(Math.random()-.5)*22,r:(sz||5)+Math.random()*4,life:0,max:1.1+Math.random()*0.9,c:col||'220,220,225'})}
+  function sparks(x,y,ang,n,spd){for(var i=0;i<n;i++){var a=ang+Math.PI+(Math.random()-.5)*0.9,v=(spd||90)*(0.5+Math.random());add({k:'k',x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:0,max:0.25+Math.random()*0.3})}}
+  function ring(x,y,col,big){add({k:'r',x:x,y:y,life:0,max:big?1.1:0.8,c:col,big:big})}
+  function text(x,y,t,col){add({k:'t',x:x,y:y,t:t,life:0,max:1.6,c:col})}
+  function step(dt){for(var i=P.length-1;i>=0;i--){var p=P[i];p.life+=dt;if(p.life>p.max){P.splice(i,1);continue}
+    if(p.vx!=null){p.x+=p.vx*dt;p.y+=p.vy*dt;var d=p.k==='k'?0.9:0.96;p.vx*=Math.pow(d,dt*60);p.vy*=Math.pow(d,dt*60)}}}
+  function draw(ctx,layer,ns){
+    if(layer===0&&!ns){var now=performance.now(),dt=last?Math.min(0.1,(now-last)/1000):0;last=now;step(dt)}
+    P.forEach(function(p){var u=p.life/p.max;
+      if(layer===0&&p.k==='s'){var r=p.r*(1+u*2.4);ctx.beginPath();ctx.arc(p.x,p.y,r,0,7);ctx.fillStyle='rgba('+p.c+','+(0.42*(1-u))+')';ctx.fill()}
+      else if(layer===0&&p.k==='w'){ctx.beginPath();ctx.arc(p.x,p.y,p.r*(1+u*1.5),0,7);ctx.fillStyle='rgba(190,220,255,'+(0.3*(1-u))+')';ctx.fill()}
+      else if(layer===1&&p.k==='k'){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*0.03,p.y-p.vy*0.03);ctx.strokeStyle='rgba(255,'+(200-u*120|0)+',80,'+(1-u)+')';ctx.lineWidth=1.6;ctx.stroke()}
+      else if(layer===1&&p.k==='r'&&!ns){var rr=(p.big?14:10)+u*(p.big?70:44);ctx.beginPath();ctx.arc(p.x,p.y,rr,0,7);ctx.strokeStyle=p.c;ctx.globalAlpha=1-u;ctx.lineWidth=p.big?3.5:2.5;ctx.shadowColor=p.c;ctx.shadowBlur=12;ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1}
+      else if(layer===1&&p.k==='t'&&!ns){var al=u<0.12?u/0.12:u>0.7?(1-u)/0.3:1;ctx.globalAlpha=al;ctx.font='700 15px -apple-system,"PingFang TC","Microsoft JhengHei",sans-serif';ctx.textAlign='center';ctx.lineWidth=4;ctx.strokeStyle='rgba(0,0,0,.65)';ctx.strokeText(p.t,p.x,p.y-24-u*26);ctx.fillStyle=p.c;ctx.fillText(p.t,p.x,p.y-24-u*26);ctx.globalAlpha=1;ctx.textAlign='left'}});
+  }
+  /* continuous emitters while driving */
+  function tick(pt,loc,cid,p,failing){
+    var v=loc.v||0,a=loc.acc||0,ang=pt[2],bx=pt[0]-Math.cos(ang)*9,by=pt[1]-Math.sin(ang)*9;
+    if(cid==='wet'&&v>60&&Math.random()<0.9)add({k:'w',x:bx+(Math.random()-.5)*6,y:by+(Math.random()-.5)*6,vx:-Math.cos(ang)*v*0.12+(Math.random()-.5)*14,vy:-Math.sin(ang)*v*0.12+(Math.random()-.5)*14,r:3+Math.random()*3,life:0,max:0.6});
+    if(v>255&&Math.random()<(v-255)/90)sparks(bx,by,ang,2,70);
+    if(a<-0.9&&p.brk>=4&&Math.random()<0.12*(p.brk-3))smoke(pt[0],pt[1],1,null,3);
+    if(failing==='engine')smoke(bx,by,2,'120,120,128',5);
+    // shift lights + gear
+    var G=[0,80,120,155,190,225,262,300,400],g=1;while(g<8&&v>=G[g])g++;var fr=Math.max(0,Math.min(1,(v-G[g-1])/(G[g]-G[g-1])));
+    var thr=failing?0:(a>0.3?1:a<-0.8?-1:0.35);SFX.engineSet(v<3?0.05:fr,thr);if(GEARL&&g>GEARL&&v>20)SFX.shift();GEARL=g;
+    var lit=Math.round(fr*15);LEDS.forEach(function(l,i){l.className=i<lit?(i<5?'g':i<10?'r':'b'):''});$('shift').classList.toggle('flash',fr>0.94&&g<8);
+    $('hGear').textContent=v<3?'N':g;
+    var drs=(loc.frac>0.925||loc.frac<0.12)&&cid!=='wet';$('hDrs').classList.toggle('on',drs);
+  }
+  /* onboard chase-cam inset */
+  function onboard(pt,cond,show){return;
+    var c=$('onb');c.classList.toggle('on',!!show);$('onbl').classList.toggle('on',!!show);if(!show)return;
+    var d=window.devicePixelRatio||1,w=200*d,h=124*d;if(c.width!==w){c.width=w;c.height=h}
+    var key=(cond&&cond.id)||'';if(OBC.key!==key){OBC.key=key;OBC.cv.width=1060*SCALE;OBC.cv.height=660*SCALE;var x=OBC.cv.getContext('2d');x.setTransform(SCALE,0,0,SCALE,0,0);T.draw(x,{wet:key==='wet',hot:key==='hot',active:-1,labels:false})}
+    var o=c.getContext('2d'),z=2.6*d;o.setTransform(1,0,0,1,0,0);o.clearRect(0,0,w,h);o.fillStyle='#07080b';o.fillRect(0,0,w,h);
+    o.save();o.translate(w/2,h*0.66);o.rotate(-pt[2]-Math.PI/2);o.scale(z,z);o.translate(-pt[0],-pt[1]);
+    o.drawImage(OBC.cv,0,0,OBC.cv.width/SCALE,OBC.cv.height/SCALE);
+    draw(o,0,1);T.car(o,pt[0],pt[1],pt[2],'#ff375f',1,null,1.25);draw(o,1,1);o.restore();
+    var g=o.createLinearGradient(0,0,0,h);g.addColorStop(0,'rgba(0,0,0,.45)');g.addColorStop(.3,'rgba(0,0,0,0)');o.fillStyle=g;o.fillRect(0,0,w,h);
+  }
+  function jolt(col){var tw=document.querySelector('.tw'),vg=$('vign');tw.classList.remove('shake');vg.classList.remove('go2');void tw.offsetWidth;vg.style.setProperty('--vc',col);tw.classList.add('shake');vg.classList.add('go2')}
+  function lapBanner(t){$('lapBan').innerHTML='<div class="lapban">'+t+'</div>';setTimeout(function(){$('lapBan').innerHTML=''},1800)}
+  /* 5 red lights */
+  function lights(cb){
+    var el=$('lights'),cols=[].slice.call(el.children),i=0;cols.forEach(function(c){c.classList.remove('lit')});el.classList.add('on');SFX.engineStart(0.06);SFX.engineSet(0.08,0);
+    var iv=setInterval(function(){
+      if(i<5){cols[i].classList.add('lit');LEDS.forEach(function(l,q){l.className=q<3*(i+1)?(q<5?'g':q<10?'r':'b'):''});SFX.light(i);SFX.engineSet(0.12+0.09*(i+1),0.5);i++;return}
+      clearInterval(iv);setTimeout(function(){el.classList.remove('on');LEDS.forEach(function(l){l.className=''});SFX.go();SFX.engineSet(0.55,1);
+        $('goHost').innerHTML='<div class="golbl">GO!</div>';setTimeout(function(){$('goHost').innerHTML=''},900);cb()},150+Math.random()*250)},230);
+  }
+  /* chequered flag + confetti */
+  function chequer(){var q=$('chq');q.classList.remove('go2');void q.offsetWidth;q.classList.add('go2')}
+  function confetti(){
+    var c=$('fxcv'),d=window.devicePixelRatio||1,r=c.getBoundingClientRect();c.width=r.width*d;c.height=r.height*d;var o=c.getContext('2d'),bits=[],cols=['#bf5af2','#ff375f','#ffd60a','#30d158','#5ac8fa','#ffffff'];
+    for(var i=0;i<160;i++)bits.push({x:c.width*(0.3+Math.random()*0.4),y:c.height*0.42,vx:(Math.random()-.5)*14*d,vy:(-6-Math.random()*10)*d,a:Math.random()*6,va:(Math.random()-.5)*0.4,s:(4+Math.random()*5)*d,c:cols[i%cols.length]});
+    var t0=performance.now();(function f(ts){var u=(ts-t0)/1000;o.clearRect(0,0,c.width,c.height);if(u>3.2)return;
+      bits.forEach(function(b){b.vy+=0.32*d;b.vx*=0.99;b.x+=b.vx;b.y+=b.vy;b.a+=b.va;o.save();o.translate(b.x,b.y);o.rotate(b.a);o.globalAlpha=Math.max(0,1-u/3.2);o.fillStyle=b.c;o.fillRect(-b.s/2,-b.s/4,b.s,b.s/2);o.restore()});requestAnimationFrame(f)})(t0);
+  }
+  function countUp(el,to,pref){var t0=performance.now();(function f(ts){var u=Math.min(1,(ts-t0)/700),e=1-Math.pow(1-u,3);var n=el();if(n)n.textContent=ft(to*e);if(u<1)requestAnimationFrame(f)})(t0)}
+  var GEN=0,GEARL=0;
+  function reset(){GEN++;P=[];last=0;$('hDrs').classList.remove('on');LEDS.forEach(function(l){l.className=''});$('shift').classList.remove('flash');$('hGear').textContent='N'}
+  function idle(){$('hDrs').classList.remove('on');LEDS.forEach(function(l){l.className=''});$('shift').classList.remove('flash');$('hGear').textContent='N'}
+  /* keep animating after a run so rings / labels fade out instead of freezing */
+  function settle(){var my=++GEN,t0=performance.now();(function f(){if(my!==GEN)return;draw_();if(P.length&&performance.now()-t0<4000)requestAnimationFrame(f);else{P=[];draw_()}})()}
+  var draw_=function(){};function bindDraw(fn){draw_=fn}
+  return {idle:idle,settle:settle,bindDraw:bindDraw,draw:draw,tick:tick,smoke:smoke,sparks:sparks,ring:ring,text:text,jolt:jolt,lights:lights,chequer:chequer,confetti:confetti,countUp:countUp,onboard:onboard,lapBanner:lapBanner,reset:reset};
+})();
+
+/* ---------------- runs ---------------- */
+function practiceRuns(){return st.runs.filter(function(r){return r.cond==='practice'&&r.best!=null})}
+function pbRun(excl){var b=null;practiceRuns().forEach(function(r){if(r!==excl&&(!b||r.best<b.best))b=r});return b}
+function bestSectors(excl){var b=[null,null,null,null];practiceRuns().forEach(function(r){if(r===excl||!r.s)return;r.s.forEach(function(x,j){if(b[j]==null||x<b[j])b[j]=x})});return b}
+function splitClass(j,t,excl){var bs=bestSectors(excl),pb=pbRun(excl);if(bs[j]==null)return '';if(t<bs[j])return 'p';if(pb&&pb.s&&t<pb.s[j])return 'g';return 'y'}
+var TAGS=[{f:0.1,o:[0,-100]},{f:0.439,o:[120,-140]},{f:0.659,o:[225,85]},{f:0.814,o:[195,30]}];
+function placeTags(){
+  var v=view(),d=window.devicePixelRatio||1,svg='';
+  TAGS.forEach(function(tg,j){var p=T.at(tg.f),x=(v.ox+(p[0]+tg.o[0])*v.s)/d,y=(v.oy+(p[1]+tg.o[1])*v.s)/d,px=(v.ox+p[0]*v.s)/d,py=(v.oy+p[1]*v.s)/d,A=tiltPt(cv,x,y),B=tiltPt(cv,px,py);x=A[0];y=A[1];px=B[0];py=B[1];
+    var el=$('tag'+j);if(el){el.style.left=x+'px';el.style.top=y+'px'}
+    svg+='<line x1="'+px+'" y1="'+py+'" x2="'+x+'" y2="'+y+'" stroke="'+SC[j]+'" stroke-opacity=".55" stroke-width="1.2" stroke-dasharray="3 3"/><circle cx="'+px+'" cy="'+py+'" r="3.5" fill="'+SC[j]+'"/>'});
+  $('tagLines').innerHTML=svg;
+}
+/* active: sector being driven; done: finished sector times; dl: delta vs last run; evs: {j:[html,cls]} ; live: running time in active sector */
+function renderSplits(active,done,cond,excl,dl,evs,live){
+  var h='';for(var j=0;j<4;j++){var t=done[j],cls=t!=null&&cond==='practice'?splitClass(j,t,excl):'',d=dl&&dl[j]!=null?dl[j]:null,ev=evs&&evs[j];
+    var tt=t!=null?t.toFixed(3):(j===active&&live!=null?live.toFixed(1):'—');
+    h+='<div class="stag'+(j===active?' on':'')+(cls?' '+cls:'')+'" id="tag'+j+'" style="--c:'+SC[j]+'"><div class="n">S'+(j+1)+' · '+SN[j]+'</div><div class="t num"><span>'+tt+'</span>'+(d!=null?'<span class="d '+(d<0?'g':'r')+'">'+sg(d)+'</span>':'')+'</div>'+(ev?'<div class="ev '+ev[1]+'">'+ev[0]+'</div>':'')+'</div>'}
+  $('tags').innerHTML=h;placeTags();
+}
+function setBusy(b){busy=b;['runPractice','runHot','runWet','runBatch','runBatch2','submitBtn'].forEach(function(i){var e=$(i);if(e)e.disabled=b});bxBtns()}
+var EVTXT={lock:['🔒 鎖死衝出','+'+SIM.PEN.lock+' 秒','#ff375f'],spin:['🌀 雨中打滑','+'+SIM.PEN.spin+' 秒','#ff9f0a'],kerb:['💢 重壓路肩','+'+SIM.PEN.kerb+' 秒','#ff9f0a'],engine:['💥 引擎故障','退賽','#ff375f'],puncture:['💥 輪胎爆胎','退賽','#ff375f']};
+function run(cid,opt){opt=opt||{};
+  if(busy&&!opt.batch)return;if(!st.id){showWelcome();return}
+  var c=SIM.COND[cid],p=SIM.sanitize(opt.params||st.params),n=st.runs.length+1;
+  var r=SIM.simulate(p,c,{seed:SIM.hashStr(st.id+'|'+n+'|'+cid+'|'+Date.now())});
+  var laps=r.laps.slice(0,c.laps);
+  var prevSame=null;st.runs.forEach(function(x){if(x.cond===cid&&x.laps&&x.laps[0]&&x.laps[0].t!=null)prevSame=x});
+  var segs=[],T0=0;
+  laps.forEach(function(l){
+    var tr=T.trace(l.s,l.ev),stop=null;
+    if(l.t==null){var ff=l.ev[0]==='engine'?0.07:T.SB[2]+0.03;stop=tr.t[T.idxOf(ff)]}
+    var dur=stop!=null?stop:tr.t[T.N];segs.push({l:l,tr:tr,t0:T0,dur:dur,fail:stop!=null?l.ev[0]:null});T0+=dur;
+  });
+  var RU=T.launch(150,segs[0].tr),PRE=RU.T;
+  var TS=TSC[cid]*(opt.speed||1),total=T0,start=null,cur=-1,done=[],dl=[],evs={},shown=-1,fired={},startFuel=p.fuel;
+  setBusy(true);$('idle').style.display='none';
+  VIEW.cond=c;VIEW.callout=null;trail=[];drops=[];FX.reset();if(cid==='wet')SFX.rain(true,0.04);showDnf(null);var lastSec=-1;$('hSess').textContent=CONDN[cid]+(opt.batch?' · 🧪 批次 '+(opt.batch.i+1)+'/'+opt.batch.n:'');$('hDelta').innerHTML=prevSame?'<span class="dchip">對比上次（#'+prevSame.n+'）</span>':'';
+  function frame(ts){
+    if(start==null)start=ts;
+    var tr0=(ts-start)/1000*TS;
+    if(tr0<PRE){ /* run-up from behind the line: the clock starts when the car crosses it */
+      var fr=1-RU.pos(tr0)/T.LAP_M,ptl=T.at(fr),vk=RU.v(tr0);VIEW.frac=fr;VIEW.active=-1;trail.push([ptl[0],ptl[1]]);if(trail.length>22)trail.shift();
+      FX.tick(ptl,{v:vk,acc:1,frac:fr},cid,p,null);FX.onboard(ptl,c,true);gauge(vk);$('pT').style.height='100%';$('pB').style.height='0%';
+      $('hTime').textContent='0:00.000';$('hLap').textContent='暖胎 → 1/'+c.laps;$('prog').style.width='0%';draw();requestAnimationFrame(frame);return}
+    var t=Math.min(total,tr0-PRE),k=0;while(k<segs.length-1&&t>=segs[k].t0+segs[k].dur)k++;
+    var sgm=segs[k],tl=t-sgm.t0;
+    if(k!==cur){if(cur>=0)FX.lapBanner(k===segs.length-1?'最後一圈 · LAP '+sgm.l.lap+'/'+c.laps:'LAP '+sgm.l.lap+'/'+c.laps);cur=k;lastSec=-1;done=[null,null,null,null];dl=[null,null,null,null];evs={};shown=-1;$('hLap').textContent=sgm.l.lap+'/'+c.laps}
+    var loc=T.locate(sgm.tr,tl),j=loc.frac<T.SB[1]?0:loc.frac<T.SB[2]?1:loc.frac<T.SB[3]?2:3;
+    if(t>=total&&!sgm.fail)j=4;
+    for(var jj=0;jj<Math.min(j,4);jj++)done[jj]=sgm.l.s[jj];
+    if(j-1>lastSec&&j>0){lastSec=j-1;var sj0=lastSec,stt=sgm.l.s[sj0],sc=cid==='practice'?splitClass(sj0,stt,null):'',scol=sc==='p'?'#bf5af2':sc==='g'?'#30d158':sc==='y'?'#ffd60a':'#ffffff',bp=T.at(T.SB[(sj0+1)%4]);
+      FX.ring(bp[0],bp[1],scol,sc==='p');SFX.chime(sc||'n');FX.text(bp[0],bp[1],'S'+(sj0+1)+' '+stt.toFixed(2)+(sc==='p'?' 🟣':''),scol)}
+    // sector finished -> compare with the previous run in the same conditions
+    if(j-1>shown&&j>0){shown=j-1;var ref=prevSame&&prevSame.laps[k]&&prevSame.laps[k].s?prevSame.laps[k].s:null;
+      if(ref){var sd=done[shown]-ref[shown],cum=0;for(var q2=0;q2<=shown;q2++)cum+=done[q2]-ref[q2];dl[shown]=sd;
+        $('hDelta').innerHTML='<span class="dchip num '+(cum<0?'g':'y')+'">比上次 '+sg(cum)+'</span>'}}
+    sgm.l.ev.forEach(function(e){var key=k+e;if(fired[key]||!EVTXT[e])return;
+      var w={spin:T.SB[1]+0.06,lock:T.SB[2]+0.012,kerb:T.SB[3]+0.055,engine:0.06,puncture:T.SB[2]+0.025}[e];if(w==null||loc.frac<w)return;fired[key]=1;
+      VIEW.callout={e:e,t0:performance.now()};var cp=T.at(loc.frac),info0=EVTXT[e];FX.jolt(info0[2]);({lock:function(){SFX.screech(0.75)},spin:function(){SFX.screech(1.2)},kerb:SFX.kerb,engine:SFX.failure,puncture:SFX.puncture})[e]();FX.ring(cp[0],cp[1],info0[2],true);FX.text(cp[0],cp[1],info0[0]+' '+info0[1],info0[2]);if(e==='lock'||e==='spin'){FX.smoke(cp[0],cp[1],e==='spin'?26:18)}else if(e==='kerb'||e==='puncture'){FX.sparks(cp[0],cp[1],cp[2],26,120);FX.smoke(cp[0],cp[1],6,null,3)}else if(e==='engine'){FX.smoke(cp[0],cp[1],20,'110,110,118',6);FX.sparks(cp[0],cp[1],cp[2],14,80)}var sj={spin:1,lock:2,kerb:3,engine:0,puncture:2}[e],info=EVTXT[e];evs[sj]=[info[0]+' · '+info[1],info[2]==='#ff375f'?'r':'o'];setTimeout(function(){var el=$('tag'+sj);if(el){el.classList.remove('alert');void el.offsetWidth;el.classList.add('alert')}},0)});
+    VIEW.frac=sgm.fail&&tl>=sgm.dur-0.05?VIEW.frac:loc.frac;VIEW.active=Math.min(j,3);
+    var pt=T.at(VIEW.frac),lt0=trail[trail.length-1];if(lt0&&Math.hypot(lt0[0]-pt[0],lt0[1]-pt[1])>60)trail=[];trail.push([pt[0],pt[1]]);if(trail.length>22)trail.shift();FX.tick(pt,loc,cid,p,sgm.fail&&tl>sgm.dur*0.9?sgm.fail:null);FX.onboard(pt,c,true);
+    var spd=sgm.fail&&tl>sgm.dur-1.2?loc.v*Math.max(0,(sgm.dur-tl)/1.2):loc.v;gauge(spd);
+    var a=loc.acc||0;$('pT').style.height=(a>0.3?100:a>-0.3?55:0)+'%';$('pB').style.height=(a<-0.8?Math.min(100,-a*9):0)+'%';
+    $('hTime').textContent=ft(tl);
+    var lf=sgm.dur>0?tl/sgm.dur:0,prev=k>0?laps[k-1]:null;
+    var ty0=prev?(prev.tireEnd!=null?prev.tireEnd:prev.tire):1,ty1=sgm.l.tireEnd!=null?sgm.l.tireEnd:sgm.l.tire;
+    $('hTyre').textContent=Math.round(Math.max(0,ty0+(ty1-ty0)*lf)*100)+'%';
+    var f0=prev?prev.fuel:startFuel,f1=sgm.l.t!=null?sgm.l.fuel:f0;$('hFuel').textContent=(f0+(f1-f0)*lf).toFixed(1);
+    $('hEng').textContent=Math.round(sgm.l.engT+(a>0.3?1:0))+'°C';
+    var secStart=0;for(var q3=0;q3<Math.min(j,4);q3++)secStart+=sgm.l.s[q3];
+    renderSplits(Math.min(j,3),done,cid,null,dl,evs,tl-secStart);
+    $('prog').style.width=(100*t/total)+'%';draw();
+    if(t>=total){finish();return}
+    requestAnimationFrame(frame);
+  }
+  function finish(){
+    var last=segs[segs.length-1];
+    var good=laps.filter(function(l){return l.t!=null}),best=good.length?good.reduce(function(a,l){return l.t<a.t?l:a}):null;
+    var rec={n:n,cond:cid,code:SIM.code(p),params:p,laps:laps.map(function(l){return {lap:l.lap,t:l.t,s:l.s,ev:l.ev,tire:l.tireEnd!=null?l.tireEnd:l.tire,fuel:l.fuel,engT:l.engT}}),
+      best:best?best.t:null,s:best?best.s:null,ev:best?best.ev:[],dnf:(r.dnf&&r.dnf.lap<=c.laps)?r.dnf:null,secs:(total+PRE)/TS,t:Date.now()};
+    if(opt.batch)rec.batch=opt.batch.id;
+    FX.onboard(null,null,false);FX.idle();FX.settle();SFX.rain(false);if(!last.fail)SFX.engineStop();gauge(0);$('pT').style.height='0%';$('pB').style.height='0%';
+    if(last.fail&&rec.dnf){showDnf(rec);$('hTime').textContent='DNF';FX.jolt('#ff375f')}
+    if(!last.fail&&best){var pbPrev=pbRun();var isPB=cid==='practice'&&(!pbPrev||best.t<pbPrev.best);
+      var vsLast=prevSame&&prevSame.best!=null?best.t-prevSame.best:null;FX.chequer();SFX.finish(isPB);if(isPB){setTimeout(FX.confetti,350);setTimeout(function(){SFX.sparkle();SFX.cheer(0.45,2.2)},350)}
+      setTimeout(function(){var b=document.querySelector('#bannerHost .bt');if(b)FX.countUp(function(){return document.querySelector('#bannerHost .bt')},best.t)},20);
+      banner((isPB?'🟣 新個人最佳 ':'🏁 ')+'<span class="bt num">'+ft(best.t)+'</span>'+(vsLast!=null?'<span style="font-size:15px;font-weight:500;margin-left:10px;color:'+(vsLast<0?'#7ee2a0':'#ffd60a')+'">比上次 '+sg(vsLast)+'</span>':''),isPB?'rgba(191,90,242,.45)':'rgba(48,209,88,.3)')}
+    st.runs.push(rec);st.trackSec+=(total+PRE)/TS;save();sel=rec.n;
+    if(opt.batch){renderLog();renderHeader();setTimeout(function(){opt.onDone(rec)},650);return}
+    writeFile();
+    setTimeout(function(){setBusy(false);VIEW.active=-1;VIEW.callout=null;draw();renderAll();askSaveOnce()},450);
+  }
+  VIEW.frac=0.001;VIEW.active=-1;draw();gauge(0);$('hTime').textContent=ft(0);$('prog').style.width='0%';renderSplits(-1,[null,null,null,null],cid,null,null,{});if(opt.noLights)requestAnimationFrame(frame);else FX.lights(function(){requestAnimationFrame(frame)});
+}
+$('runPractice').onclick=function(){SFX.ui('click');run('practice')};$('runHot').onclick=function(){run('hot')};$('runWet').onclick=function(){run('wet')};
+
+
+/* ---------------- DOE batch test ---------------- */
+var BX={sel:null,last:null,id:0},BX_LIMIT=1;
+function bxLeft(){return Math.max(0,BX_LIMIT-(st.batches||0))}
+function bxBtns(){var l=bxLeft();['runBatch','runBatch2'].forEach(function(id){var b=$(id);if(!b)return;b.querySelector('.bl').textContent=l?'剩餘 '+l+' 次':'已用完';b.classList.toggle('used',!l);if(!l)b.disabled=true})}
+function bxVals(d){return pvals(d)}
+function bxInit(keep){if(!keep||!BX.sel){BX.sel={};SIM.PARAMS.forEach(function(d){BX.sel[d.k]=[st.params[d.k]]})}}
+function bxCombos(){var ks=SIM.PARAMS.map(function(d){return d.k}),out=[{}];
+  ks.forEach(function(k){var vs=BX.sel[k],nx=[];out.forEach(function(o){vs.forEach(function(v){var c=Object.assign({},o);c[k]=v;nx.push(c)})});out=nx});
+  return out.map(function(o){return SIM.sanitize(o)})}
+function bxVaried(){return SIM.PARAMS.filter(function(d){return BX.sel[d.k].length>1})}
+var BX_MAX=12;
+function bxSpeed(n){return n>5?2:1}
+function bxCost(cs){var sp=bxSpeed(cs.length),t=0;cs.forEach(function(p){var r=SIM.simulate(p,SIM.COND.practice,{noise:false,failures:false});t+=((r.laps[0].t||45)+4.9)/(TSC.practice*sp)});return t}
+function bxRender(){
+  $('bxRows').innerHTML=SIM.PARAMS.map(function(d){var sel=BX.sel[d.k],v=sel.length>1;
+    return '<div class="bx-row'+(v?' var':'')+'" style="--c:'+PCOL[d.k]+'"><div class="nm"><i></i>'+PSHORT[d.k]+'</div><div class="bx-chips">'+bxVals(d).map(function(x){
+      return '<button class="bx-c'+(sel.indexOf(x)>=0?' on':'')+(String(x)===String(st.params[d.k])?' cur':'')+'" data-k="'+d.k+'" data-v="'+x+'">'+(d.k==='tire'?SIM.TIRES[x].name:x)+'</button>'}).join('')+
+      '</div><div class="bx-q">'+(d.options?'':'<button class="pill" data-q="pm" data-k="'+d.k+'">±1</button>')+'<button class="pill" data-q="one" data-k="'+d.k+'">固定</button></div></div>'}).join('');
+  $('bxRows').querySelectorAll('.bx-c').forEach(function(b){b.onclick=function(){var k=b.dataset.k,d=SIM.PARAMS.filter(function(x){return x.k===k})[0],v=d.options?b.dataset.v:+b.dataset.v,a=BX.sel[k],i=a.indexOf(v);
+    if(i>=0){if(a.length>1)a.splice(i,1)}else a.push(v);a.sort(function(x,y){return bxVals(d).indexOf(x)-bxVals(d).indexOf(y)});SFX.ui('tick');bxRender()}});
+  $('bxRows').querySelectorAll('[data-q]').forEach(function(b){b.onclick=function(){var k=b.dataset.k,d=SIM.PARAMS.filter(function(x){return x.k===k})[0],c=st.params[k];
+    if(b.dataset.q==='one')BX.sel[k]=[c];else{var vs=bxVals(d);BX.sel[k]=[c-1,c,c+1].filter(function(x){return vs.indexOf(x)>=0})}SFX.ui('tick');bxRender()}});
+  var cs=bxCombos(),n=cs.length,V=bxVaried(),ok=n>=2&&n<=BX_MAX,sec=ok?bxCost(cs):0,full=ok&&n>5?sec*2:sec;
+  var badge=n>BX_MAX?'<span class="bx-badge r">最多 '+BX_MAX+' 組，請減少選擇</span>':n<2?'<span class="bx-badge d">在任一列多選，至少 2 組</span>':n>5?'<span class="bx-badge y">⚡ 超過 5 組 · 時間減半</span>':'<span class="bx-badge d">再加 '+(6-n)+' 組即可時間減半 ⚡</span>';
+  $('bxSum').innerHTML='<div class="n num">'+n+'<small>組</small></div><div class="f">'+(V.length?V.map(function(d){return PSHORT[d.k]+' '+BX.sel[d.k].length+' 個水準'}).join(' × '):'目前只有 1 組（尚未多選）')+'<br>'+badge+'</div>'+
+    '<div class="tm">'+(ok?'<div class="f">賽道時間</div><b class="num">約 '+Math.round(sec)+' 秒</b>'+(n>5?'<div class="f" style="text-decoration:line-through">'+Math.round(full)+' 秒</div>':''):'')+'</div>'+
+    (ok?'<div class="bx-prev">'+cs.map(function(p){return '<span>'+SIM.code(p)+'</span>'}).join('')+'</div>':'');
+  $('bxGo').disabled=!ok;$('bxGo').textContent=ok?'開始批次測試（'+n+' 組）▶':'開始批次測試 ▶';
+}
+function bxOpen(keep){var lt=$('bxLeftTxt');if(lt)lt.textContent='（本次之後剩 '+Math.max(0,bxLeft()-1)+' 次）';if(busy)return;if(!st.id){showWelcome();return}if(!bxLeft()){toast('DOE 批次測試已用完（每人 '+BX_LIMIT+' 次）');SFX.ui('error');return}bxInit(keep);bxRender();$('batchModal').style.display='flex';SFX.ui('click')}
+$('runBatch').onclick=function(){bxOpen(false)};$('runBatch2').onclick=function(){bxOpen(false)};
+$('bxClose').onclick=function(){$('batchModal').style.display='none'};
+$('bxReset').onclick=function(){bxInit(false);bxRender()};
+$('bxGo').onclick=function(){var cs=bxCombos();if(cs.length<2||cs.length>BX_MAX)return;$('batchModal').style.display='none';runBatch(cs,bxVaried().map(function(d){return d.k}))};
+function runBatch(cs,vk){
+  var id=++BX.id+'-'+Date.now(),n=cs.length,sp=bxSpeed(n),res=[],i=0,t0=Date.now();
+  BX.last={id:id,cs:cs,vk:vk,res:res,sp:sp,sel:JSON.parse(JSON.stringify(BX.sel))};st.batches=(st.batches||0)+1;save();
+  setBusy(true);showPage('test');window.scrollTo({top:0,behavior:'smooth'});bxOut(true);
+  if(sp>1)banner('🧪 批次 '+n+' 組 · ⚡ 時間減半','rgba(90,200,250,.4)');
+  (function next(){
+    if(i>=n){bxDone();return}
+    bxOut(true,i);
+    run('practice',{params:cs[i],speed:sp,noLights:i>0,batch:{id:id,i:i,n:n},onDone:function(rec){res.push(rec);i++;bxOut(true,i);next()}});
+  })();
+  function bxDone(){
+    var good=res.filter(function(r){return r.best!=null}),best=good.length?good.reduce(function(a,r){return r.best<a.best?r:a}):null;
+    BX.last.best=best;save();
+    setBusy(false);VIEW.active=-1;VIEW.callout=null;if(best)sel=best.n;renderAll();bxOut(false);writeFile();askSaveOnce();
+    SFX.finish(false);if(best)banner('🧪 批次完成 · 最快 <span class="num">'+ft(best.best)+'</span>','rgba(191,90,242,.4)');
+    setTimeout(function(){var el=$('batchOut');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},600);
+  }
+}
+function bxColor(u){u=Math.max(0,Math.min(1,u));function h(c){return [parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16)]}
+  var a=u<0.5?h('#bf5af2'):h('#5ac8fa'),b=u<0.5?h('#5ac8fa'):h('#ffd60a'),k=u<0.5?u*2:(u-0.5)*2;return 'rgb('+a.map(function(x,i){return Math.round(x+(b[i]-x)*k)}).join(',')+')'}
+function bxLabel(k,v){return k==='tire'?SIM.TIRES[v].name:String(v)}
+function bxOut(running,idx){
+  var B=BX.last;if(!B){$('batchOut').innerHTML='';return}
+  var cs=B.cs,res=B.res,n=cs.length,h='<div class="glass">';
+  if(running){
+    h+='<div class="bxo-h"><b>🧪 批次測試進行中</b><small class="num">'+Math.min(idx||0,n)+' / '+n+' 組'+(B.sp>1?' · ⚡ 時間減半':'')+'</small></div><div class="bxo-list">'+
+      cs.map(function(p,j){var r=res[j];return '<div class="bxo-i'+(j===idx?' run':'')+'">'+SIM.code(p)+'<b>'+(r?(r.dnf?'退賽':ft(r.best,2)):j===idx?'測試中…':'—')+'</b></div>'}).join('')+'</div></div>';
+    $('batchOut').innerHTML=h;return}
+  var ts=res.filter(function(r){return r.best!=null}).map(function(r){return r.best}),mn=Math.min.apply(null,ts),mx=Math.max.apply(null,ts),best=B.best;
+  function U(t){return mx-mn<0.05?0:(t-mn)/(mx-mn)}
+  function cellFor(r){if(!r)return '<div></div>';var isB=best&&r===best,dn=!!r.dnf,lk=(r.ev||[]).indexOf('lock')>=0||(r.laps||[]).some(function(l){return (l.ev||[]).indexOf('lock')>=0});
+    return '<div class="bxo-cell'+(isB?' best':'')+(dn?' dnf':'')+'" data-n="'+r.n+'" style="background:'+(dn?'':bxColor(U(r.best)))+'" title="'+r.code+'">'+(dn?'退賽':ft(r.best,2).slice(2))+(isB?' 🏆':'')+(lk?' 🔒':'')+'<small>'+r.code+'</small></div>'}
+  var used=Math.round(res.reduce(function(a,r){return a+(r.secs||0)},0));
+  h+='<div class="bxo-h"><b>🧪 DOE 批次結果</b><small class="num">'+n+' 組 · 用掉 '+used+' 秒'+(B.sp>1?'（已減半）':'')+'</small><span class="sp"></span><small>點格子可載入該設定</small></div>';
+  var V=B.vk;
+  if(V.length===2){var A=V[0],Bk=V[1],la=B.sel[A],lb=B.sel[Bk];
+    h+='<div class="bxo-grid" style="grid-template-columns:64px repeat('+la.length+',1fr)"><div class="ax t">'+PSHORT[Bk]+' ↓ / '+PSHORT[A]+' →</div>'+la.map(function(a){return '<div class="ax t">'+bxLabel(A,a)+'</div>'}).join('');
+    lb.forEach(function(b){h+='<div class="ax t">'+bxLabel(Bk,b)+'</div>';la.forEach(function(a){var r=res.filter(function(x){return String(x.params[A])===String(a)&&String(x.params[Bk])===String(b)})[0];h+=cellFor(r)})});h+='</div>'}
+  else{var sorted=res.slice().sort(function(a,b){return (a.best==null?1e9:a.best)-(b.best==null?1e9:b.best)});
+    h+='<div class="bxo-grid" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))">'+sorted.map(cellFor).join('')+'</div>'}
+  /* main effects: average lap per level of each varied factor */
+  var me=V.map(function(k){var lv=B.sel[k].map(function(v){var rs=res.filter(function(r){return String(r.params[k])===String(v)&&r.best!=null});return {v:v,m:rs.length?rs.reduce(function(a,r){return a+r.best},0)/rs.length:null}}).filter(function(x){return x.m!=null});
+    var ms=lv.map(function(x){return x.m}),rg=ms.length?Math.max.apply(null,ms)-Math.min.apply(null,ms):0;return {k:k,lv:lv,rg:rg}});
+  me.sort(function(a,b){return b.rg-a.rg});
+  if(me.length){h+='<div class="bxo-ins">'+me.map(function(e,ix){var ms=e.lv.map(function(x){return x.m}),lo=Math.min.apply(null,ms),hi=Math.max.apply(null,ms);
+    return '<div class="bxo-me" style="--c:'+PCOL[e.k]+'"><h5>'+PSHORT[e.k]+' 主效應'+(ix===0&&me.length>1?' · 影響最大':'')+'<span class="num">差 '+e.rg.toFixed(2)+' 秒</span></h5><div class="bxo-bars">'+e.lv.map(function(x){var hh=hi-lo<0.01?50:15+85*(1-(x.m-lo)/(hi-lo));
+      return '<div><i style="height:'+hh+'%"></i><span class="num">'+bxLabel(e.k,x.v)+'</span></div>'}).join('')+'</div></div>'}).join('')+'</div>'}
+  var spread=ts.length>1?mx-mn:0,locks=res.filter(function(r){return (r.laps||[]).some(function(l){return (l.ev||[]).indexOf('lock')>=0})}).length;
+  h+='<div class="bxo-note">柱子越高 = 該水準的平均圈速越快。'+(spread<0.6?'⚠ 各組差距不到 0.6 秒：車手誤差約 ±0.25 秒，差距小的組合可能只是運氣，建議重測最好的幾組。':'車手誤差約 ±0.25 秒，差距小於 0.3 秒的組合請重測確認。')+(locks?' 🔒 有 '+locks+' 組在髮夾彎鎖死，時間偏慢。':'')+'</div>';
+  h+='<div class="bxo-btns">'+(best?'<button class="pill v" id="bxApply">套用最快組合 '+best.code+'</button>':'')+'<button class="pill" id="bxAgain">🧪 調整後再測一次</button><button class="pill" id="bxHide">收起</button></div></div>';
+  $('batchOut').innerHTML=h;
+  $('batchOut').querySelectorAll('.bxo-cell').forEach(function(c){c.onclick=function(){if(busy)return;var r=st.runs.filter(function(x){return x.n===+c.dataset.n})[0];if(!r)return;sel=r.n;st.params=SIM.sanitize(r.params);save();renderSetup();renderAnalysis();renderLog();renderIdle();toast('已載入 '+r.code);SFX.ui('tick')}});
+  var ap=$('bxApply');if(ap)ap.onclick=function(){st.params=SIM.sanitize(best.params);sel=best.n;save();renderAll();toast('已套用 '+best.code+'（記得再單獨確認一次）');SFX.ui('confirm')};
+  $('bxAgain').onclick=function(){BX.sel=JSON.parse(JSON.stringify(B.sel));bxOpen(true)};if(!bxLeft()){$('bxAgain').disabled=true;$('bxAgain').textContent='🧪 批次次數已用完'}
+  $('bxHide').onclick=function(){$('batchOut').innerHTML=''};
+}
+
+
+/* ---------------- plain-language result card (test page) ---------------- */
+var KNAME={rw:'下壓力',eng:'引擎模式',susp:'懸吊硬度',brk:'煞車點',tire:'輪胎'};
+function kv(k,v){return k==='tire'?SIM.TIRES[v].name:String(v)}
+function runBefore(r,cond){var b=null;st.runs.forEach(function(x){if(x.n<r.n&&(!cond||x.cond===cond))b=x});return b}
+function knobDiff(a,b){if(!a||!b)return [];return SIM.PARAMS.filter(function(d){return String(a.params[d.k])!==String(b.params[d.k])}).map(function(d){return KNAME[d.k]+' '+kv(d.k,b.params[d.k])+'→'+kv(d.k,a.params[d.k])})}
+function evCount(r){var c={};(r.laps||[]).forEach(function(l){(l.ev||[]).forEach(function(e){if(e!=='pit')c[e]=(c[e]||0)+1})});return c}
+function evText(c){var t={lock:'髮夾彎鎖死',spin:'S 彎打滑',kerb:'重壓路肩'},o=[];Object.keys(c).forEach(function(e){if(t[e])o.push(t[e]+' '+c[e]+' 次（+'+(SIM.PEN[e]*c[e])+' 秒）')});return o}
+function verdict(r){
+  if(!r)return '';
+  if(r.dnf)return '💥 <b>退賽：'+(SIM.REASON[r.dnf.reason]||'')+'</b>（第 '+r.dnf.lap+' 圈）。'+(DNFHINT[r.dnf.reason]?'常見原因：'+DNFHINT[r.dnf.reason]+'。':'');
+  var ev=evText(evCount(r)),prev=runBefore(r,r.cond),ch=knobDiff(r,prev),out=[];
+  if(r.cond!=='practice'){var last=r.laps[r.laps.length-1],pb=pbRun();
+    out.push((r.cond==='hot'?'🔥 高溫':'🌧️ 雨天')+'測試 '+r.laps.length+' 圈完成，最佳 <b>'+ft(r.best,2)+'</b>'+(pb?'（乾地個人最佳 '+ft(pb.best,2)+'）':'')+'。');
+    out.push('結束時輪胎剩 <b>'+Math.round((last.tire||0)*100)+'%</b>，引擎 <b>'+Math.round(last.engT)+'°C</b>。');
+  }else{var pb=pbRun(r);
+    if(!pb)out.push('第一圈完成：<b>'+ft(r.best,2)+'</b>。接下來一次只改一個設定再測，最容易看出差異。');
+    else{var d=r.best-pb.best,ds=r.s.map(function(x,j){return x-pb.s[j]}),gi=0,li=0;ds.forEach(function(x,j){if(x<ds[gi])gi=j;if(x>ds[li])li=j});
+      out.push(d<0?'🟣 <b>新個人最佳</b>，比之前快 <b class="g">'+(-d).toFixed(2)+' 秒</b>。':'比個人最佳慢 <b class="r">'+d.toFixed(2)+' 秒</b>。');
+      var parts=[];if(ds[gi]<-0.05)parts.push('快在 <b>S'+(gi+1)+' '+SN[gi]+'</b>（'+sg(ds[gi],2)+'）');if(ds[li]>0.05)parts.push('慢在 <b>S'+(li+1)+' '+SN[li]+'</b>（'+sg(ds[li],2)+'）');
+      if(parts.length)out.push('主要'+parts.join('，')+'。');
+      if(Math.abs(d)<0.3)out.push('差距小於車手誤差（約 ±0.25 秒），可能只是運氣，建議重測確認。');}
+  }
+  if(ch.length)out.push('與上一次'+(r.cond==='practice'?'練習':'同條件測試')+'相比改了：'+ch.join('、')+'。');else if(prev)out.push('設定與上一次相同（重測）。');
+  out.push(ev.length?'⚠ '+ev.join('、')+'。':'✅ 沒有失誤。');
+  return out.join(' ');
+}
+function renderResCard(){
+  var r=st.runs.filter(function(x){return x.n===sel})[0]||lastRun();
+  if(!r){$('resCard').innerHTML='<div class="empty">完成第一次測試後，這裡會用一句話告訴你這圈發生了什麼。</div>';return}
+  var pb=pbRun(r),prev=runBefore(r,r.cond),pj=SIM.project(r.params,SIM.COND.practice),pits=pj.laps.filter(function(l){return l.ev.indexOf('pit')>=0}).length;
+  var h='<div class="rc-top"><div class="rc-lap"><div class="k">#'+r.n+' · '+CONDN[r.cond]+(r.batch?' · 🧪 批次':'')+'</div><div class="v num">'+(r.dnf?'<span class="r">退賽</span>':ft(r.best))+'</div><div class="k num">'+r.code+'</div></div><div class="rc-dl">';
+  if(!r.dnf&&r.cond==='practice'&&pb){var d=r.best-pb.best;h+='<span class="rc-pill">vs 個人最佳 <b class="num '+(d<0?'pp':'yy')+'">'+sg(d,2)+'</b></span>'}
+  if(!r.dnf&&prev&&prev.best!=null){var d2=r.best-prev.best;h+='<span class="rc-pill">vs 上一次 <b class="num '+(d2<0?'g':'r')+'">'+sg(d2,2)+'</b></span>'}
+  h+='<span class="rc-pill">12 圈預測（乾地） <b class="num">'+ft12(q12(r.params))+'</b></span></div><div></div></div><div class="rc-verdict">'+verdict(r)+'</div>';
+  if(r.s){h+='<div class="rc-secs">'+r.s.map(function(t,j){var c=r.cond==='practice'?splitClass(j,t,r):'',d=pb&&pb.s&&r.cond==='practice'?t-pb.s[j]:null;
+    return '<div class="rc-sec '+c+'" style="--c:'+SC[j]+'"><div class="n">S'+(j+1)+' '+SN[j]+'</div><div class="t num">'+t.toFixed(2)+'</div>'+(d!=null?'<div class="d num '+(d<0?'g':'r')+'">'+sg(d,2)+'</div>':'<div class="d">&nbsp;</div>')+'</div>'}).join('')+'</div>'}
+  h+='<div class="rc-foot"><span class="rc-risk">此設定 12 圈預測（乾地）：'+(pj.finished?'<b>可完賽</b>':'<b class="r">第 '+pj.dnf.lap+' 圈退賽</b>')+' · 進站 <b>'+pits+'</b> 次 · 引擎故障率 <b>'+Math.round(pj.engRace*100)+'%</b> · 鎖死率 <b>'+Math.round(pj.lockLap*100)+'%</b>/圈</span><span class="sp"></span><button class="rc-go" id="toAna">📊 查看完整賽果分析 →</button></div>';
+  $('resCard').innerHTML=h;$('toAna').onclick=function(){showPage('ana')};
+}
+
+/* ---------------- 賽果分析 page ---------------- */
+var RT={key:'n',desc:true};
+function renderAnaPage(){
+  var P=practiceRuns(),pb=pbRun();
+  $('anSum').innerHTML=st.runs.length?'共 <b>'+st.runs.length+'</b> 次測試（練習 '+st.runs.filter(function(r){return r.cond==='practice'}).length+'、高溫 '+st.runs.filter(function(r){return r.cond==='hot'}).length+'、雨天 '+st.runs.filter(function(r){return r.cond==='wet'}).length+'）· 個人最佳 <b class="pp num">'+(pb?ft(pb.best):'—')+'</b>'+(pb?' · '+pb.code:'')+(function(){var b=null;st.runs.forEach(function(r){var q=q12(r.params);if(q!=null&&(b==null||q<b.q))b={q:q,c:r.code}});return b?' · 最佳 12 圈預測 <b class="num">'+ft12(b.q)+'</b> · '+b.c:''})():'完成測試後，這裡整理你所有的數據。';
+  renderRunsTable();renderFx();renderCmp();renderRisk();renderAnalysis();
+}
+function renderRunsTable(){
+  if(!st.runs.length){$('runsTbl').innerHTML='<div class="empty">尚未測試</div>';return}
+  var pb=pbRun(),bs=bestSectors(null),rows=st.runs.slice(),q12b=null;st.runs.forEach(function(r){var q=q12(r.params);if(q!=null&&(!q12b||q<q12(q12b.params)))q12b=r});
+  function val(r,k){if(k==='n')return r.n;if(k==='best')return r.best==null?1e9:r.best;if(k==='q12'){var qq=q12(r.params);return qq==null?1e9:qq}if(k==='dl')return r.best==null||!pb||r.cond!=='practice'?1e9:r.best-pb.best;if(/^s\d$/.test(k))return r.s?r.s[+k[1]]:1e9;if(k==='tire')return 'SMH'.indexOf(r.params.tire);if(k==='cond')return r.cond;return r.params[k]}
+  rows.sort(function(a,b){var x=val(a,RT.key),y=val(b,RT.key);return (x<y?-1:x>y?1:0)*(RT.desc?-1:1)});
+  var cols=[['n','#'],['cond','條件'],['rw','下壓'],['eng','引擎'],['susp','懸吊'],['brk','煞車'],['tire','輪胎'],['q12','12 圈預測'],['best','單圈'],['s0','S1'],['s1','S2'],['s2','S3'],['s3','S4'],['dl','Δ最佳'],['ev','事件'],['pj','12 圈']];
+  var h='<div style="overflow:auto"><table class="rt"><thead><tr>'+cols.map(function(c){return '<th data-k="'+c[0]+'" class="'+(RT.key===c[0]?'on'+(RT.desc?' desc':''):'')+'">'+c[1]+'</th>'}).join('')+'</tr></thead><tbody>';
+  rows.forEach(function(r){var prev=runBefore(r,null),ec=evCount(r),pj=SIM.project(r.params,SIM.COND.practice);
+    h+='<tr class="rrow'+(sel===r.n?' sel':'')+(pb===r?' best':'')+'" data-n="'+r.n+'"><td>'+r.n+'</td><td>'+(r.batch?'🧪':'')+CICON[r.cond]+'</td>'+
+      ['rw','eng','susp','brk','tire'].map(function(k){var ch=prev&&String(prev.params[k])!==String(r.params[k]);return '<td><span class="kv'+(ch?' ch':'')+'" style="--c:'+PCOL[k]+'">'+(k==='tire'?SIM.TIRES[r.params[k]].name:r.params[k])+'</span></td>'}).join('')+
+      '<td><b class="'+(q12b===r?'pp':'')+'">'+ft12(q12(r.params))+'</b></td><td class="lap1">'+(r.dnf?'<span class="r">退賽</span>':ft(r.best))+'</td>'+
+      [0,1,2,3].map(function(j){if(!r.s)return '<td>—</td>';var c=r.cond==='practice'&&bs[j]!=null&&Math.abs(r.s[j]-bs[j])<1e-6?'p':'';return '<td class="sc '+c+'">'+r.s[j].toFixed(2)+'</td>'}).join('')+
+      '<td>'+(r.best!=null&&pb&&r.cond==='practice'?'<span class="'+(r===pb?'pp':'yy')+'">'+(r===pb?'最佳':sg(r.best-pb.best,2))+'</span>':'—')+'</td>'+
+      '<td>'+((ec.lock?'🔒'+ec.lock+' ':'')+(ec.spin?'🌀'+ec.spin+' ':'')+(ec.kerb?'💢'+ec.kerb:'')||'—')+'</td><td>'+(pj.finished?'<span class="g">✓</span>':'<span class="r">L'+pj.dnf.lap+' ✗</span>')+'</td></tr>'});
+  h+='</tbody></table></div><div class="bxo-note">有底色的設定 = 與上一次測試不同。紫色分段 = 你的最快分段。「12 圈預測」= 這組設定跑 12 圈乾地的總時間（含進站、無失誤），主持人排位就是用這個數字。</div>';
+  $('runsTbl').innerHTML=h;
+  $('runsTbl').querySelectorAll('th').forEach(function(th){th.onclick=function(){var k=th.dataset.k;if(k==='ev'||k==='pj')return;if(RT.key===k)RT.desc=!RT.desc;else{RT.key=k;RT.desc=k==='n'}renderRunsTable()}});
+  $('runsTbl').querySelectorAll('tr.rrow').forEach(function(tr){tr.onclick=function(){if(busy)return;var r=st.runs.filter(function(x){return x.n===+tr.dataset.n})[0];sel=r.n;st.params=SIM.sanitize(r.params);save();renderSetup();renderLog();renderResCard();renderRunsTable();renderCmp(true);renderRisk();renderAnalysis();toast('已載入 #'+r.n+' '+r.code);SFX.ui('tick')}});
+}
+function renderFx(){
+  var P=practiceRuns().filter(function(r){return r.s});
+  if(P.length<2){$('fxCharts').innerHTML='<div class="empty">至少需要 2 次乾地練習</div>';return}
+  var lo=Math.min.apply(null,P.map(function(r){return r.best})),hi=Math.max.apply(null,P.map(function(r){return r.best}));if(hi-lo<0.5)hi=lo+0.5;
+  var R0=SIM.rng(11),h='<div class="fx-grid">';
+  SIM.PARAMS.forEach(function(d){var lv=pvals(d),W=220,H=170,pl=30,pr=8,pt=10,pbm=24;
+    function X(v){var i=lv.indexOf(v);return pl+(i+0.5)*(W-pl-pr)/lv.length}function Y(t){return pt+(t-lo)/(hi-lo)*(H-pt-pbm)}
+    var g='',means=[];
+    [lo,(lo+hi)/2,hi].forEach(function(t){g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(t)+'" y2="'+Y(t)+'" stroke="rgba(255,255,255,.06)"/><text x="'+(pl-4)+'" y="'+(Y(t)+3)+'" text-anchor="end" font-size="9" fill="rgba(235,235,245,.4)">'+t.toFixed(1)+'</text>'});
+    lv.forEach(function(v){var rs=P.filter(function(r){return String(r.params[d.k])===String(v)});
+      g+='<text x="'+X(v)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10" fill="rgba(235,235,245,.55)">'+(d.k==='tire'?SIM.TIRES[v].name:v)+'</text>';
+      rs.forEach(function(r){g+='<circle cx="'+(X(v)+(R0()-.5)*10).toFixed(1)+'" cy="'+Y(r.best).toFixed(1)+'" r="2.6" fill="'+PCOL[d.k]+'" opacity=".55"/>'});
+      if(rs.length){var m=rs.reduce(function(a,r){return a+r.best},0)/rs.length;means.push([X(v),Y(m),rs.length,m,v])}});
+    if(means.length>1)g+='<polyline points="'+means.map(function(m){return m[0]+','+m[1]}).join(' ')+'" fill="none" stroke="#fff" stroke-width="1.6" opacity=".85"/>';
+    means.forEach(function(m){g+='<circle cx="'+m[0]+'" cy="'+m[1]+'" r="4" fill="#fff"/>'});
+    var note;
+    if(means.length<2)note='只測過 1 個水準，看不出效果。';
+    else{var bm=means.reduce(function(a,m){return m[3]<a[3]?m:a}),wm=means.reduce(function(a,m){return m[3]>a[3]?m:a});note='已測 '+means.length+' 個水準 · 平均最快在 <b>'+(d.k==='tire'?SIM.TIRES[bm[4]].name:bm[4])+'</b> · 水準間差 '+(wm[3]-bm[3]).toFixed(2)+' 秒'}
+    h+='<div class="fx" style="--c:'+PCOL[d.k]+'"><h5><i></i>'+PSHORT[d.k]+'</h5><svg viewBox="0 0 '+W+' '+H+'" width="100%">'+g+'</svg><div class="s">'+note+'</div></div>'});
+  h+='</div><div class="bxo-note">每個點 = 一次乾地練習圈；白線 = 該水準的平均圈速（越低越快）。⚠ 若同時改了好幾個設定，效果會混在一起，只能看趨勢。DOE 批次測試能讓效果分得更清楚。</div>';
+  $('fxCharts').innerHTML=h;
+}
+var CMP={a:null,b:null};
+function runLabel(r){return '#'+r.n+' '+CICON[r.cond]+' '+r.code+' · '+(r.dnf?'退賽':ft(r.best,2))}
+function renderCmp(reset){
+  var R=st.runs.filter(function(r){return r.s});
+  if(R.length<2){$('cmpOut').innerHTML='<div class="empty">至少需要 2 次完成的測試</div>';$('cmpA').innerHTML='';$('cmpB').innerHTML='';return}
+  var pb=pbRun(),cur=R.filter(function(r){return r.n===sel})[0]||R[R.length-1];
+  if(reset||!CMP.a||!R.some(function(r){return r.n===CMP.a}))CMP.a=cur.n;
+  if(reset||!CMP.b||!R.some(function(r){return r.n===CMP.b})||CMP.b===CMP.a){var o=pb&&pb.n!==CMP.a?pb:(runBefore(cur,null)||R.filter(function(r){return r.n!==CMP.a})[0]);CMP.b=o.n}
+  var opts=R.slice().reverse().map(function(r){return '<option value="'+r.n+'">'+runLabel(r)+'</option>'}).join('');
+  $('cmpA').innerHTML=opts;$('cmpB').innerHTML=opts;$('cmpA').value=CMP.a;$('cmpB').value=CMP.b;
+  $('cmpA').onchange=function(){CMP.a=+this.value;renderCmp()};$('cmpB').onchange=function(){CMP.b=+this.value;renderCmp()};
+  var A=R.filter(function(r){return r.n===CMP.a})[0],B=R.filter(function(r){return r.n===CMP.b})[0];
+  var t='<table class="rt"><thead><tr><th>設定</th><th>A #'+A.n+'</th><th>B #'+B.n+'</th></tr></thead><tbody>'+SIM.PARAMS.map(function(d){var df=String(A.params[d.k])!==String(B.params[d.k]);return '<tr><td>'+PSHORT[d.k]+'</td><td><span class="kv'+(df?' ch':'')+'" style="--c:'+PCOL[d.k]+'">'+kv(d.k,A.params[d.k])+'</span></td><td><span class="kv">'+kv(d.k,B.params[d.k])+'</span></td></tr>'}).join('')+'</tbody></table>';
+  var mx=0.3;A.s.forEach(function(x,j){mx=Math.max(mx,Math.abs(x-B.s[j]))});
+  t+='<table class="rt" style="margin-top:10px"><thead><tr><th>分段</th><th>A</th><th>B</th><th>A − B</th></tr></thead><tbody>'+A.s.map(function(x,j){var d=x-B.s[j];return '<tr><td><span style="color:'+SC[j]+'">S'+(j+1)+'</span> '+SN[j]+'</td><td>'+x.toFixed(2)+'</td><td>'+B.s[j].toFixed(2)+'</td><td><span class="'+(d<0?'g':'r')+'">'+sg(d,2)+'</span> <span style="display:inline-block;height:6px;border-radius:3px;vertical-align:1px;width:'+Math.round(60*Math.abs(d)/mx)+'px;background:'+(d<0?'#30d158':'#ff375f')+'"></span></td></tr>'}).join('')+
+    '<tr><td><b>單圈</b></td><td><b>'+ft(A.best,2)+'</b></td><td><b>'+ft(B.best,2)+'</b></td><td><b class="'+(A.best<B.best?'g':'r')+'">'+sg(A.best-B.best,2)+'</b></td></tr></tbody></table>';
+  if(A.cond!==B.cond)t+='<div class="bxo-note">⚠ 兩圈的天氣條件不同，時間差有一部分來自天氣。</div>';
+  var tA=T.trace(A.s,A.ev||[]),tB=T.trace(B.s,B.ev||[]);
+  $('cmpOut').innerHTML='<div class="cmp-row"><div>'+t+'</div><div class="pane"><h4>速度曲線<span class="lg"><span><i style="background:#fff"></i>A #'+A.n+'</span><span><i style="background:var(--purple)"></i>B #'+B.n+'</span></span></h4>'+speedChart(tA,tB,'B')+'</div></div>';
+}
+function renderRisk(){
+  var p=SIM.sanitize(st.params),code=SIM.code(p),pj=SIM.project(p,SIM.COND.practice),pits=pj.laps.filter(function(l){return l.ev.indexOf('pit')>=0}).map(function(l){return l.lap});
+  var tot=pj.laps.reduce(function(a,l){return a+(l.t||0)},0),locks=pj.lockLap*SIM.LAPS;
+  $('riskCode').textContent=code;
+  var h='<div class="risk-grid">'+
+    '<div class="rk2"><div class="k">預估 12 圈總時間（乾地）</div><div class="v num">'+(pj.finished?ft(tot,1):'<span class="r">退賽</span>')+'</div><div class="s">'+(pj.finished?'不含鎖死等失誤':'第 '+pj.dnf.lap+' 圈 '+SIM.REASON[pj.dnf.reason])+'</div></div>'+
+    '<div class="rk2"><div class="k">進站</div><div class="v num">'+pits.length+' 次</div><div class="s">'+(pits.length?'第 '+pits.join('、')+' 圈 · 每次 +'+SIM.PIT_LOSS+' 秒':'輪胎撐得完全程')+'</div></div>'+
+    '<div class="rk2"><div class="k">全程引擎故障機率</div><div class="v num '+lv(pj.engRace,0.05,0.2)+'">'+Math.round(pj.engRace*100)+'%</div><div class="s">引擎溫度約 '+Math.round(pj.engT)+'°C · 天氣越熱越高</div></div>'+
+    '<div class="rk2"><div class="k">髮夾彎鎖死</div><div class="v num '+lv(pj.lockLap,0.05,0.1)+'">'+Math.round(pj.lockLap*100)+'% / 圈</div><div class="s">12 圈平均約 '+locks.toFixed(1)+' 次 · 約 +'+(locks*SIM.PEN.lock).toFixed(1)+' 秒 · 下雨會更多</div></div></div>';
+  var tested={practice:false,hot:false,wet:false};st.runs.forEach(function(r){if(r.code===code)tested[r.cond]=true});
+  h+='<div class="cov3"><span>這組設定測過的條件：</span>'+[['practice','☀️ 乾地'],['hot','🔥 高溫'],['wet','🌧️ 雨天']].map(function(c){return '<span class="'+(tested[c[0]]?'ok':'')+'">'+(tested[c[0]]?'✓ ':'✗ ')+c[1]+'</span>'}).join('')+'<span>正賽天氣未知</span></div>';
+  h+='<div class="row r2" style="margin-top:12px"><div class="pane"><h4>輪胎與燃油預測（乾地）</h4>'+projHTML({params:p,cond:'practice',laps:[]})+'</div></div>';
+  $('riskOut').innerHTML=h;
+}
+
+/* ---------------- analysis dashboard ---------------- */
+function renderAnalysis(){
+  var r=st.runs.filter(function(x){return x.n===sel})[0]||lastRun();
+  if(!r){return}
+  $('anaTag').textContent='#'+r.n+' · '+CONDN[r.cond]+' · '+r.code;
+  if(!r.s){$('ana').innerHTML='<div class="kpis">'+kpi('結果','<span style="color:var(--red)">退賽</span>',(SIM.REASON[r.dnf.reason]||'')+' · 第 '+r.dnf.lap+' 圈')+'</div>'+projHTML(r);return}
+  var pb=pbRun(r),tr=T.trace(r.s,r.ev||[]),pbTr=pb?T.trace(pb.s,pb.ev||[]):null;
+  var vmax=Math.max.apply(null,tr.v),hp=0,i0=T.SIDX[2],i1=T.SIDX[3],vmin=1e9;for(var q=i0;q<i1;q++)vmin=Math.min(vmin,tr.v[q]);
+  var dl=pb?r.best-pb.best:null,isPB=r.cond==='practice'&&(!pb||dl<0);
+  var evs=[];(r.laps||[]).forEach(function(l){(l.ev||[]).forEach(function(e){if(e!=='pit')evs.push({l:l.lap,e:e})})});
+  var h='<div class="kpis">'+
+    kpi(r.laps.length>1?'最佳單圈':'單圈時間','<span class="num" style="'+(isPB?'color:var(--purple)':'')+'">'+ft(r.best)+'</span>',r.laps.length>1?r.laps.map(function(l){return 'L'+l.lap+' '+ft(l.t,2)}).join(' · '):(isPB?'新個人最佳':''))+
+    kpi('與個人最佳差距',pb?'<span class="num" style="color:'+(dl<0?'var(--purple)':'var(--yellow)')+'">'+sg(dl)+'</span>':'—',pb?'個人最佳 '+ft(pb.best)+'（#'+pb.n+'）':'第一次練習賽')+
+    kpi('最高速度','<span class="num">'+Math.round(vmax)+'</span><small style="font-size:13px;color:var(--dim)"> km/h</small>','長直道末端')+
+    kpi('髮夾彎最低速','<span class="num">'+Math.round(vmin)+'</span><small style="font-size:13px;color:var(--dim)"> km/h</small>','彎心速度')+
+    kpi('事件','<span class="num">'+evs.length+'</span>',evs.length?evs.map(function(x){return {lock:'鎖死',spin:'打滑',kerb:'壓路肩'}[x.e]}).join('、'):'乾淨的一圈')+'</div>';
+  // cue
+  if(pb&&r.cond==='practice'){var ds=r.s.map(function(x,j){return x-pb.s[j]}),wj=0;ds.forEach(function(x,j){if(x>ds[wj])wj=j});
+    h+='<div class="cue">'+(ds[wj]>0.02?'本圈主要失分在 <b>S'+(wj+1)+' '+SN[wj]+'</b>（'+sg(ds[wj])+' 秒，相對個人最佳）':'所有分段都追平或快於個人最佳 🟣')+'</div>'}
+  else if(r.cond!=='practice')h+='<div class="cue">此為<b>'+SIM.COND[r.cond].name+'</b>：比較基準為乾地個人最佳，重點看事件、輪胎與燃油，而非圈速。</div>';
+  h+='<div class="row"><div class="pane"><h4>速度曲線（依賽道距離）<span class="lg"><span><i style="background:#fff"></i>本圈</span>'+(pbTr?'<span><i style="background:var(--purple)"></i>個人最佳</span>':'')+'</span></h4>'+speedChart(tr,pbTr)+'</div></div>';
+  h+='<div class="row r2"><div class="pane"><h4>分段時間比較<span class="lg"><span><i style="background:rgba(255,255,255,.8)"></i>本圈</span>'+(pb?'<span><i style="background:var(--purple)"></i>個人最佳</span>':'')+'</span></h4>'+sectorBars(r,pb)+'</div>'+
+       '<div class="pane"><h4>各分段歷次練習趨勢<span class="lg">越低越快</span></h4>'+sectorHistory(r)+'</div></div>';
+  h+='<div class="row r2"><div class="pane"><h4>12 圈正賽預測<span class="lg">'+CICON[r.cond]+' '+SIM.COND[r.cond].desc+'</span></h4>'+projHTML(r)+'</div>'+
+       '<div class="pane"><h4>本次事件</h4>'+evHTML(r)+'</div></div>';
+  $('ana').innerHTML=h;
+}
+function kpi(k,v,s){return '<div class="kpi"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="s">'+(s||'&nbsp;')+'</div></div>'}
+function speedChart(tr,pbTr,refName){refName=refName||'個人最佳';
+  var W=900,H=260,pl=40,pr=12,pt=14,ph=150,dt=ph+pt+22,dh=60,N=T.N;
+  function X(q){return pl+T.fracOf(Math.min(q,N))*(W-pl-pr)}function Y(v){return pt+(1-v/360)*ph}
+  var g='';
+  for(var j=0;j<4;j++){var x0=X(T.SIDX[j]),x1=X(T.SIDX[j+1]);g+='<rect x="'+x0+'" y="'+pt+'" width="'+(x1-x0)+'" height="'+ph+'" fill="'+SC[j]+'" opacity=".05"/><text x="'+(x0+6)+'" y="'+(pt+12)+'" font-size="11" fill="'+SC[j]+'" opacity=".9">S'+(j+1)+' '+SN[j]+'</text>'}
+  [100,200,300].forEach(function(v){g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="rgba(255,255,255,.06)"/><text x="'+(pl-6)+'" y="'+(Y(v)+4)+'" text-anchor="end" font-size="10" fill="rgba(235,235,245,.35)">'+v+'</text>'});
+  function line(t,col,w,op){var d='';for(var q=0;q<N;q+=2)d+=(q?'L':'M')+X(q).toFixed(1)+' '+Y(t.v[q]).toFixed(1);return '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="'+w+'" opacity="'+op+'" stroke-linejoin="round"/>'}
+  if(pbTr)g+=line(pbTr,'#bf5af2',1.6,.85);
+  g+=line(tr,'#ffffff',1.8,.95);
+  // delta strip
+  g+='<text x="'+pl+'" y="'+(dt-4)+'" font-size="11" fill="rgba(235,235,245,.5)">累計時間差（相對'+refName+'，向上 = 落後）</text>';
+  var mid=dt+dh/2;g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+mid+'" y2="'+mid+'" stroke="rgba(255,255,255,.12)"/>';
+  if(pbTr){var mx=0.2;for(var q=0;q<=N;q+=4)mx=Math.max(mx,Math.abs(tr.t[q]-pbTr.t[q]));
+    var d='',area='M'+X(0)+' '+mid;for(var q=0;q<=N;q+=2){var y=mid-(tr.t[q]-pbTr.t[q])/mx*(dh/2-4);d+=(q?'L':'M')+X(q).toFixed(1)+' '+y.toFixed(1);area+='L'+X(q).toFixed(1)+' '+y.toFixed(1)}
+    area+='L'+X(N)+' '+mid+'Z';var end=tr.t[N]-pbTr.t[N];
+    g+='<path d="'+area+'" fill="'+(end>0?'rgba(255,214,10,.10)':'rgba(191,90,242,.12)')+'"/><path d="'+d+'" fill="none" stroke="'+(end>0?'#ffd60a':'#bf5af2')+'" stroke-width="1.5"/>';
+    g+='<text x="'+(W-pr)+'" y="'+(dt-4)+'" text-anchor="end" font-size="11" fill="'+(end>0?'#ffd60a':'#bf5af2')+'">'+sg(end)+' s</text>';
+    for(var j2=1;j2<4;j2++){var xb=X(T.SIDX[j2]);g+='<line x1="'+xb+'" x2="'+xb+'" y1="'+dt+'" y2="'+(dt+dh)+'" stroke="rgba(255,255,255,.08)"/>'}}
+  else g+='<text x="'+((pl+W)/2)+'" y="'+(mid+4)+'" text-anchor="middle" font-size="11" fill="rgba(235,235,245,.35)">完成第二次練習賽後顯示</text>';
+  g+='<text x="'+pl+'" y="'+(H-2)+'" font-size="10" fill="rgba(235,235,245,.35)">0 m</text><text x="'+(W-pr)+'" y="'+(H-2)+'" text-anchor="end" font-size="10" fill="rgba(235,235,245,.35)">'+T.LAP_M+' m</text>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%">'+g+'</svg>';
+}
+function sectorBars(r,pb){
+  var W=420,H=200,pl=8,pr=8,pt=8,rowH=46,g='';
+  var bs=bestSectors(r);
+  for(var j=0;j<4;j++){
+    var y=pt+j*rowH,a=r.s[j],b=pb?pb.s[j]:null,base=SIM.SECTORS[j].base,lo=base*0.82,hi=base*1.22;
+    var X=function(v){return 150+(Math.max(lo,Math.min(hi,v))-lo)/(hi-lo)*(W-150-70)};
+    g+='<rect x="'+pl+'" y="'+(y+4)+'" width="3" height="32" rx="1.5" fill="'+SC[j]+'"/><text x="'+(pl+10)+'" y="'+(y+17)+'" font-size="12" fill="rgba(255,255,255,.85)">S'+(j+1)+' '+SN[j]+'</text>';
+    g+='<text x="'+(pl+10)+'" y="'+(y+33)+'" font-size="11" fill="rgba(235,235,245,.4)">最佳分段 '+(bs[j]!=null?bs[j].toFixed(2):'—')+'</text>';
+    g+='<rect x="150" y="'+(y+6)+'" width="'+(X(a)-150)+'" height="11" rx="5.5" fill="rgba(255,255,255,.8)"/>';
+    if(b!=null)g+='<rect x="150" y="'+(y+22)+'" width="'+(X(b)-150)+'" height="11" rx="5.5" fill="#bf5af2" opacity=".85"/>';
+    var d=b!=null?a-b:null;
+    g+='<text x="'+(W-pr)+'" y="'+(y+16)+'" text-anchor="end" font-size="12" fill="#fff" class="num">'+a.toFixed(2)+'</text>';
+    if(d!=null)g+='<text x="'+(W-pr)+'" y="'+(y+32)+'" text-anchor="end" font-size="11.5" fill="'+(d<0?'#bf5af2':'#ffd60a')+'">'+sg(d,2)+'</text>';
+  }
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%">'+g+'</svg>';
+}
+function sectorHistory(r){
+  var P=practiceRuns();if(P.length<2)return '<div class="empty" style="padding:40px 10px">至少需要 2 次練習賽</div>';
+  var W=420,H=200,cw=W/2,ch=H/2,g='';
+  for(var j=0;j<4;j++){
+    var ox=(j%2)*cw,oy=Math.floor(j/2)*ch,vals=P.map(function(x){return x.s[j]}),mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);if(mx-mn<0.2){mx+=0.1;mn-=0.1}
+    var x0=ox+10,x1=ox+cw-14,y0=oy+28,y1=oy+ch-10;
+    var X=function(i){return P.length>1?x0+(x1-x0)*i/(P.length-1):x0},Y=function(v){return y0+(v-mn)/(mx-mn)*(y1-y0)};
+    g+='<rect x="'+(ox+3)+'" y="'+(oy+3)+'" width="'+(cw-6)+'" height="'+(ch-6)+'" rx="12" fill="rgba(255,255,255,.025)"/>';
+    g+='<text x="'+(ox+12)+'" y="'+(oy+19)+'" font-size="11.5" fill="'+SC[j]+'">S'+(j+1)+' '+SN[j]+'</text><text x="'+(ox+cw-12)+'" y="'+(oy+19)+'" text-anchor="end" font-size="11" fill="rgba(235,235,245,.45)">最佳 '+mn.toFixed(2)+'</text>';
+    var d='';P.forEach(function(x,i){d+=(i?'L':'M')+X(i).toFixed(1)+' '+Y(x.s[j]).toFixed(1)});g+='<path d="'+d+'" fill="none" stroke="'+SC[j]+'" stroke-width="1.5" opacity=".7"/>';
+    P.forEach(function(x,i){var me=x===r,best=x.s[j]===Math.min.apply(null,vals);g+='<circle cx="'+X(i)+'" cy="'+Y(x.s[j])+'" r="'+(me?4.5:2.6)+'" fill="'+(best?'#bf5af2':me?'#fff':SC[j])+'" stroke="'+(me?'#fff':'none')+'"><title>#'+x.n+' · '+x.s[j].toFixed(3)+'</title></circle>'});
+  }
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%">'+g+'</svg>';
+}
+function lv(v,a,b){return v>=b?'lv2':v>=a?'lv1':'lv0'}
+function projHTML(r){
+  var c=SIM.COND[r.cond],pj=SIM.project(r.params,c),W=420,H=150,pl=30,pr=30,pt=10,pb=20,g='';
+  function X(l){return pl+l*(W-pl-pr)/SIM.LAPS}function Yt(v){return pt+(1-v)*(H-pt-pb)}function Yf(v){return pt+(1-v/110)*(H-pt-pb)}
+  [0,0.3,1].forEach(function(v){g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Yt(v)+'" y2="'+Yt(v)+'" stroke="'+(v===0.3?'rgba(255,159,10,.35)':'rgba(255,255,255,.06)')+'" '+(v===0.3?'stroke-dasharray="3 4"':'')+'/><text x="'+(pl-5)+'" y="'+(Yt(v)+4)+'" text-anchor="end" font-size="10" fill="rgba(235,235,245,.35)">'+(v*100)+'%</text>'});
+  for(var i=0;i<=12;i+=3)g+='<text x="'+X(i)+'" y="'+(H-4)+'" text-anchor="middle" font-size="10" fill="rgba(235,235,245,.35)">'+i+'</text>';
+  g+='<rect x="'+X(0)+'" y="'+pt+'" width="'+(X(r.laps.length)-X(0))+'" height="'+(H-pt-pb)+'" fill="rgba(90,200,250,.06)"/>';
+  var tp=[X(0)+','+Yt(1)],fp=[X(0)+','+Yf(r.params.fuel)];
+  pj.laps.forEach(function(l){var te=l.tireEnd!=null?l.tireEnd:l.tire;tp.push(X(l.lap)+','+Yt(Math.max(0,te)));if(l.ev.indexOf('pit')>=0){tp.push(X(l.lap)+','+Yt(1));g+='<text x="'+X(l.lap)+'" y="'+(pt+9)+'" text-anchor="middle" font-size="9" fill="#5ac8fa">進站</text>'}if(l.t!=null)fp.push(X(l.lap)+','+Yf(l.fuel))});
+  g+='<polyline points="'+tp.join(' ')+'" fill="none" stroke="'+SIM.TIRES[r.params.tire].color+'" stroke-width="2"/><polyline points="'+fp.join(' ')+'" fill="none" stroke="#ff9f0a" stroke-width="1.6" stroke-dasharray="5 4"/>';
+  if(pj.dnf)g+='<text x="'+X(pj.dnf.lap)+'" y="'+(Yt(0)-4)+'" text-anchor="middle" font-size="16">💥</text>';
+  var h='<svg viewBox="0 0 '+W+' '+H+'" width="100%">'+g+'</svg><div class="lg" style="display:flex;gap:14px;font-size:11.5px;color:var(--dim)"><span><i style="background:'+SIM.TIRES[r.params.tire].color+'"></i>輪胎壽命</span><span><i style="background:#ff9f0a"></i>燃油 (kg，自動加滿所需量)</span><span>藍底 = 已實測</span></div>';
+  if(pj.dnf)h+='<div class="verdict no">✗ 預測第 '+pj.dnf.lap+' 圈退賽：'+SIM.REASON[pj.dnf.reason]+'</div>';
+  else{var pl2=pj.laps.filter(function(l){return l.ev.indexOf('pit')>=0}).map(function(l){return l.lap});h+='<div class="verdict ok">✓ 預測可完成 12 圈 · '+(pl2.length?'自動進站 '+pl2.length+' 次（第 '+pl2.join('、')+' 圈）':'不需進站')+'</div>'}
+  h+='<div class="risks"><div class="rk"><div class="k">引擎溫度</div><div class="v num '+lv(pj.engT,93,98)+'">'+pj.engT.toFixed(0)+'°C</div></div><div class="rk"><div class="k">全程引擎故障率</div><div class="v num '+lv(pj.engRace,0.05,0.2)+'">'+Math.round(pj.engRace*100)+'%</div></div><div class="rk"><div class="k">髮夾彎鎖死率 / 圈</div><div class="v num '+lv(pj.lockLap,0.05,0.1)+'">'+Math.round(pj.lockLap*100)+'%</div></div></div>';
+  return h;
+}
+function evHTML(r){
+  var w=[];(r.laps||[]).forEach(function(l){(l.ev||[]).forEach(function(e){
+    if(e==='lock')w.push('<span class="ev r">🔒 第 '+l.lap+' 圈 髮夾彎鎖死 +'+SIM.PEN.lock+' s</span>');
+    if(e==='spin')w.push('<span class="ev o">🌀 第 '+l.lap+' 圈 高速 S 彎打滑 +'+SIM.PEN.spin+' s</span>');
+    if(e==='kerb')w.push('<span class="ev o">💢 第 '+l.lap+' 圈 重壓路肩 +'+SIM.PEN.kerb+' s</span>');
+    if(e==='engine')w.push('<span class="ev r">💥 第 '+l.lap+' 圈 引擎故障</span>');
+    if(e==='puncture')w.push('<span class="ev r">💥 第 '+l.lap+' 圈 輪胎爆胎</span>');})});
+  if(!w.length)w.push('<span class="ev g">✅ 沒有失誤</span>');
+  var last=r.laps[r.laps.length-1];
+  return '<div class="evs">'+w.join('')+'</div><div class="risks" style="margin-top:12px"><div class="rk"><div class="k">測試結束輪胎</div><div class="v num">'+Math.round((last.tire||0)*100)+'%</div></div><div class="rk"><div class="k">測試結束燃油</div><div class="v num">'+(last.fuel!=null?last.fuel.toFixed(1):'—')+' kg</div></div><div class="rk"><div class="k">引擎溫度</div><div class="v num">'+Math.round(last.engT)+'°C</div></div></div>';
+}
+
+/* ---------------- right column ---------------- */
+function renderHeader(){
+  $('who').innerHTML=st.id?'<b>'+esc(st.name)+'</b>'+(NOID?'':' · '+esc(st.id)):'';$('carName').textContent=NOID?'CMP · '+(st.name||'26'):'CMP-'+(st.id||'26');
+  $('nTests').textContent=st.runs.length;$('tTime').textContent=mmss(st.trackSec||0);
+}
+var Q12={};
+/* predicted 12-lap dry total, identical to Race Control qualifying (SIM.qualify) */
+function q12(p){var k=SIM.code(p);if(!(k in Q12)){var q=SIM.qualify(p);Q12[k]=q.finished?q.total:null}return Q12[k]}
+function ft12(t){return t==null?'退賽':ft(t,1)}
+function renderLog(){
+  if(!st.runs.length){$('log').innerHTML='<div class="empty">尚未測試</div>';return}
+  var pb=pbRun(),h='';
+  st.runs.slice().reverse().forEach(function(r){
+    var pj=SIM.project(r.params,SIM.COND[r.cond]),bars='';
+    if(r.s&&pb&&pb.s)r.s.forEach(function(x,j){var d=x-pb.s[j];bars+='<i style="background:'+(Math.abs(d)<0.005?'#bf5af2':d<0?'#30d158':'#ffd60a')+'"></i>'});
+    h+='<div class="lr'+(pb===r?' pb':'')+(sel===r.n?' sel':'')+'" data-n="'+r.n+'"><span class="i num">'+r.n+'</span><span title="'+(r.batch?'批次測試':'')+'">'+(r.batch?'🧪':CICON[r.cond])+'</span><div><div class="c num">'+r.code+'</div>'+(bars?'<div class="bars">'+bars+'</div>':'')+'</div><div style="text-align:right"><div class="t num">'+(r.dnf?'<span style="color:var(--red)">退賽</span><div class="why">'+(SIM.REASON[r.dnf.reason]||'')+' · L'+r.dnf.lap+'</div>':'<span title="12 圈預測（乾地）">'+ft12(q12(r.params))+'</span>')+'</div><div class="c">'+(r.dnf?'12 圈預測 '+ft12(q12(r.params)):'單圈 '+ft(r.best,2))+' · '+(pj.finished?'<span style="color:#7ee2a0">✓</span>':'<span style="color:#ff9aa8">L'+pj.dnf.lap+' ✗</span>')+'</div></div></div>';
+  });
+  $('log').innerHTML=h;
+  $('log').querySelectorAll('.lr').forEach(function(el){el.onclick=function(){if(busy)return;var r=st.runs.filter(function(x){return x.n===+el.dataset.n})[0];sel=r.n;st.params=SIM.sanitize(r.params);save();renderSetup();renderAnalysis();renderLog();renderIdle();toast('已載入第 '+r.n+' 次測試的設定')}});
+}
+function renderSub(){
+  var f=st.final;if(!f){$('subOut').innerHTML='';return}
+  $('subOut').innerHTML='<div class="hint" style="margin-top:12px;text-align:center;color:#7ee2a0">✓ 已提交 '+new Date(f.at).toLocaleTimeString('zh-TW')+'</div><div class="code num">'+esc(f.code)+'</div><div class="hint" style="margin-top:8px;text-align:center">'+(folderState==='ok'?'已存入共享資料夾':'若檔案未存入資料夾，請把上方代碼念給主持人')+'</div>';
+}
+function renderIdle(){var r=st.runs.filter(function(x){return x.n===sel})[0]||lastRun(),evs={};showDnf(r);if(r&&r.laps){var l=(r.dnf?r.laps.filter(function(x){return x.t==null})[0]:null)||r.laps.filter(function(x){return x.s===r.s})[0]||r.laps[0];(l.ev||[]).forEach(function(e){var sj={spin:1,lock:2,kerb:3,engine:0,puncture:2}[e];if(sj!=null&&EVTXT[e])evs[sj]=[EVTXT[e][0]+' · '+EVTXT[e][1],EVTXT[e][2]==='#ff375f'?'r':'o']})}renderSplits(-1,r&&r.s?r.s:[null,null,null,null],r?r.cond:'practice',r,null,evs);if(r&&r.dnf){$('hTime').textContent='DNF';VIEW.frac=dnfFrac(r.dnf.reason)}else if(r&&r.best!=null)$('hTime').textContent=ft(r.best);if(r)VIEW.cond=SIM.COND[r.cond];if(PAGE==='test'&&cv.width>2)draw()}
+function renderAll(){bxBtns();renderHeader();renderSetup();renderAnalysis();renderLog();renderSub();renderResCard();if(PAGE==='ana')renderAnaPage();if(!busy)renderIdle()}
+
+/* ---------------- submit ---------------- */
+$('submitBtn').onclick=async function(){
+  if(busy)return;if(!st.id){showWelcome();return}
+  var p=SIM.sanitize(st.params),code=SIM.code(p);
+  if(!st.runs.some(function(r){return r.code===code})&&!confirm('這組設定從未測試過，仍要提交嗎？'))return;
+  st.final={params:p,code:code,at:Date.now()};save();
+  var ok=await writeFile();
+  if(!ok){dlSave(true);toast('已下載提交檔，請放入共享資料夾')}
+  else toast('已提交決賽設定 🏁');SFX.ui('confirm');
+  renderSub();
+};
+
+/* ---------------- boot ---------------- */
+if(location.hash==='#reset'){try{localStorage.removeItem(KEY)}catch(e){}location.hash='';location.reload()}
+FX.bindDraw(function(){if(PAGE==='test')draw()});buildParams();init3D();fit();renderAll();draw();gauge(0);
+if(st.runs.length){$('idle').style.display='none';sel=lastRun().n;renderAll()}
+if(!st.id)showWelcome();else setTimeout(function(){if(folderState!=='ok')openSaveAsk(true)},900);
+})();
+</script>
+</body>
+</html>
