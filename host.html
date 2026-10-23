@@ -404,6 +404,22 @@ body.host .hbtn{border-color:rgba(10,132,255,.6);color:#9fd0ff;background:rgba(1
 .joincl .join{grid-template-columns:1fr;margin:0}
 .qrov{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(4,6,10,.82);backdrop-filter:blur(10px)}
 .qrov.on{display:flex}.qrov .qrbox svg{width:min(60vh,520px)}.qrov h3{font-size:34px;margin:0 0 18px;text-align:center}
+
+.dbm{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:rgba(4,6,10,.8);backdrop-filter:blur(8px);padding:20px}
+.dbm.on{display:flex}
+.dbbox{width:min(1200px,96vw);max-height:92vh;display:flex;flex-direction:column;gap:12px;padding:20px 22px;border-radius:22px;background:#12151c;border:1px solid var(--hair)}
+.dbh{display:flex;align-items:center;gap:10px}.dbh h3{margin:0;font-size:20px}.sp{flex:1}
+.dbrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dbrow input,.dbrow select{background:rgba(255,255,255,.06);border:1px solid var(--hair);border-radius:10px;padding:8px 12px;color:var(--ink);font-size:14px}
+.dbrow input#dbQ{flex:1;min-width:220px}
+.dbl{color:var(--mute);font-size:13px}.dbinfo{color:var(--dim);font-size:13px}
+.btn.danger{border-color:rgba(255,55,95,.5);color:#ff9aa8}.btn.danger:hover{background:rgba(255,55,95,.18)}
+.btn.sm{padding:4px 10px;font-size:12.5px;border-radius:9px}
+.dbtbl{overflow:auto;border-radius:12px;border:1px solid var(--hair2);min-height:120px}
+.dbtbl td{font-size:13.5px;white-space:nowrap}.dbtbl td .btn{margin-left:4px}
+.dbnote{margin:0;color:var(--dim);font-size:12.5px}
+.dbmsg{min-height:1.2em;font-size:13px;color:#ffd60a}.dbmsg.err{color:#ff9aa8}.dbmsg.ok{color:#7ee2a0}
+.dblogin p{color:var(--mute);margin:0 0 10px}
 </style>
 </head>
 <body>
@@ -575,6 +591,19 @@ body.host .hbtn{border-color:rgba(10,132,255,.6);color:#9fd0ff;background:rgba(1
 </section>
 
 <div class="qrov" id="qrOv"><div><h3>掃描加入 CMP 大獎賽</h3><div class="qrbox"><div id="qrBig"></div><div class="qrurl num" id="qrUrl2"></div></div><p style="text-align:center;color:var(--mute);margin-top:14px">按 Q 或點任意處關閉</p></div></div>
+<div class="dbm" id="dbM"><div class="dbbox">
+  <div class="dbh"><h3>☁ 雲端資料庫管理</h3><span class="sp"></span><button class="btn" id="dbClose">✕ 關閉</button></div>
+  <div id="dbLogin" class="dblogin"><p>輸入管理 PIN（在 Supabase 設定的那一組）。只有主持人需要。</p>
+    <div class="dbrow"><input id="dbPin" type="password" placeholder="管理 PIN" autocomplete="off"><button class="btn pri" id="dbGo">登入</button></div></div>
+  <div id="dbMain" style="display:none">
+    <div class="dbrow"><span class="dbl">活動代碼</span><select id="dbEv"></select><span id="dbEvInfo" class="dbinfo"></span><span class="sp"></span>
+      <button class="btn" id="dbRef">↻ 重新整理</button><button class="btn" id="dbDl">⬇ 下載備份 JSON</button><button class="btn danger" id="dbDelEv">刪除此活動全部資料</button></div>
+    <div class="dbrow"><input id="dbQ" placeholder="搜尋姓名或工號"><span id="dbCnt" class="dbinfo"></span></div>
+    <div class="dbtbl"><table><thead><tr><th>姓名</th><th>工號</th><th>測試</th><th>練習最佳</th><th>決賽設定</th><th>最後更新</th><th></th></tr></thead><tbody id="dbRows"></tbody></table></div>
+    <p class="dbnote">提醒：玩家若還在玩，下一圈會重新上傳，覆蓋你的修改（被刪除的玩家也會重新出現）。正式比賽前請先清掉彩排資料，或彩排一律用 ?e=TEST。</p>
+  </div>
+  <div id="dbMsg" class="dbmsg"></div>
+</div></div>
 <!-- 1 LIVE -->
 <section class="stage" id="st-live">
   <div class="tiles" id="liveTiles" style="grid-template-columns:repeat(5,1fr)"></div>
@@ -593,6 +622,7 @@ body.host .hbtn{border-color:rgba(10,132,255,.6);color:#9fd0ff;background:rgba(1
         <div class="s">彩排用</div>
         <button class="btn" id="demo">🎲 模擬 100 位玩家（逐步進行）</button>
         <button class="btn" id="clearAll">清除全部</button>
+        <button class="btn" id="dbBtn">☁ 雲端資料庫</button>
       </div>
       <details class="hostonly" style="margin-top:10px;color:var(--mute);font-size:13px"><summary style="cursor:pointer">手動輸入設定代碼（備援）</summary>
         <textarea id="codes" rows="3" style="margin-top:8px" placeholder="王小明, W6-E3-S5-B3-TS"></textarea>
@@ -4403,7 +4433,7 @@ var CLOUD = (function () {
   function req(path, opt) {
     opt = opt || {}; var ctl = new AbortController(), t = setTimeout(function () { ctl.abort(); }, opt.timeout || 9000);
     return fetch(URL0 + '/rest/v1/' + path, { method: opt.method || 'GET', headers: Object.assign({}, H, opt.headers || {}), body: opt.body, signal: ctl.signal, cache: 'no-store' })
-      .then(function (r) { clearTimeout(t); if (!r.ok) return r.text().then(function (x) { throw new Error(r.status + ' ' + x.slice(0, 120)); }); return r.status === 204 || opt.method === 'POST' ? null : r.json(); },
+      .then(function (r) { clearTimeout(t); if (!r.ok) return r.text().then(function (x) { throw new Error(r.status + ' ' + x.slice(0, 120)); }); return r.status === 204 || (opt.method === 'POST' && !opt.expect) ? null : r.json(); },
         function (e) { clearTimeout(t); throw e; });
   }
   function upsert(table, conflict, row, to) { return req(table + '?on_conflict=' + conflict, { method: 'POST', timeout: to, headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(row) }); }
@@ -4415,6 +4445,9 @@ var CLOUD = (function () {
     players: function (since) { return req('cmpgp_players?select=id,payload,updated_at&event=eq.' + encodeURIComponent(event) + (since ? '&updated_at=gt.' + encodeURIComponent(since) : '') + '&order=updated_at.asc&limit=1000'); },
     putControl: function (data) { return upsert('cmpgp_control', 'event', { event: event, data: data }); },
     control: function () { return req('cmpgp_control?select=data&event=eq.' + encodeURIComponent(event)).then(function (r) { return r && r[0] ? r[0].data : null; }); },
+    /* host admin: read any event, and PIN-protected changes through the cmpgp_admin() database function */
+    playersOf: function (ev) { return req('cmpgp_players?select=id,name,payload,updated_at&event=eq.' + encodeURIComponent(ev) + '&order=updated_at.desc&limit=1000'); },
+    admin: function (pin, action, args) { args = args || {}; return req('rpc/cmpgp_admin', { method: 'POST', expect: true, body: JSON.stringify({ p_pin: pin, p_action: action, p_event: args.event || null, p_id: args.id || null, p_name: args.name || null, p_payload: args.payload || null }) }); },
     /* link players open: same folder, garage page, same event code */
     playerUrl: function (garageFile) { var u = new URL(garageFile || './', location.href); u.search = ''; if (event !== 'GP2026') u.searchParams.set('e', event); return u.href; }
   };
@@ -5099,6 +5132,48 @@ function fpShow(){if(!FP.on)return;var f=FP.f,fp=$('fp'),cur=$('fpCur');
     setTimeout(function(){if(FP.on&&FP.f===f){tg.classList.add('press');cur.classList.add('clk')}},900)},f===1?1700:500);
   FP.t=setTimeout(function(){FP.f=(f+1)%FPCAP.length;fpShow()},FPDUR[f]);
 }
+
+/* ---------- cloud database manager (host only; changes go through the PIN-checked cmpgp_admin() function) ---------- */
+var DBM={pin:'',ev:CLOUD.event,rows:[]};
+try{DBM.pin=sessionStorage.getItem('cmpgp_pin')||''}catch(e){}
+function dbMsg(t,c){var m=$('dbMsg');m.textContent=t||'';m.className='dbmsg'+(c?' '+c:'')}
+function dbErr(e){var t=String(e&&e.message||e);dbMsg(/bad pin/.test(t)?'PIN 錯誤':/cmpgp_admin|404|PGRST202/.test(t)?'資料庫還沒有管理功能：請先在 Supabase 執行 supabase_admin.sql':'操作失敗：'+t,'err')}
+$('dbBtn').onclick=function(){if(!CLOUD.on){toast('雲端未啟用');return}$('dbM').classList.add('on');dbMsg('');if(DBM.pin)dbLogin();else{$('dbLogin').style.display='';$('dbMain').style.display='none';setTimeout(function(){$('dbPin').focus()},50)}};
+$('dbClose').onclick=function(){$('dbM').classList.remove('on')};
+$('dbGo').onclick=function(){DBM.pin=$('dbPin').value.trim();dbLogin()};
+$('dbPin').onkeydown=function(e){if(e.key==='Enter')$('dbGo').click()};
+async function dbLogin(){dbMsg('連線中…');try{await CLOUD.admin(DBM.pin,'check');try{sessionStorage.setItem('cmpgp_pin',DBM.pin)}catch(e){}
+  $('dbLogin').style.display='none';$('dbMain').style.display='';dbMsg('');await dbEvents();await dbLoad()}
+  catch(e){DBM.pin='';try{sessionStorage.removeItem('cmpgp_pin')}catch(x){}$('dbLogin').style.display='';$('dbMain').style.display='none';dbErr(e)}}
+async function dbEvents(){var ev=await CLOUD.admin(DBM.pin,'events')||[];if(!ev.some(function(x){return x.event===DBM.ev}))ev.unshift({event:DBM.ev,n:0});
+  $('dbEv').innerHTML=ev.map(function(x){return '<option value="'+esc(x.event)+'"'+(x.event===DBM.ev?' selected':'')+'>'+esc(x.event)+'（'+x.n+' 人）'+(x.event===CLOUD.event?' · 目前活動':'')+'</option>'}).join('')}
+$('dbEv').onchange=function(){DBM.ev=this.value;dbLoad()};
+$('dbRef').onclick=async function(){try{await dbEvents();await dbLoad()}catch(e){dbErr(e)}};
+$('dbQ').oninput=dbRender;
+async function dbLoad(){var keep=$('dbMsg').textContent;if(!keep)dbMsg('讀取中…');try{DBM.rows=await CLOUD.playersOf(DBM.ev)||[];if(!keep)dbMsg('');dbRender()}catch(e){dbErr(e)}}
+function dbBest(p){var b=null;(p&&p.runs||[]).forEach(function(r){if(r.c==='practice'&&r.b!=null&&(b==null||r.b<b))b=r.b});return b}
+function dbRender(){var q=$('dbQ').value.trim().toLowerCase(),R=DBM.rows.filter(function(r){return !q||(String(r.name)+' '+r.id).toLowerCase().indexOf(q)>=0});
+  $('dbEvInfo').textContent=DBM.ev===CLOUD.event?'（大螢幕正在使用這個活動）':'（不是目前大螢幕的活動）';$('dbCnt').textContent='顯示 '+R.length+' / '+DBM.rows.length+' 位';
+  $('dbRows').innerHTML=R.map(function(r){var p=r.payload||{},b=dbBest(p),f=p.final&&p.final.params?SIM.code(p.final.params):'—';
+    return '<tr><td><b>'+esc(r.name||(p.player&&p.player.name))+'</b></td><td class="num">'+esc(r.id)+'</td><td class="num">'+((p.runs||[]).length)+'</td><td class="num">'+(b!=null?ft(b):'—')+'</td><td class="num">'+esc(f)+'</td><td class="num">'+new Date(r.updated_at).toLocaleString('zh-TW',{hour12:false})+'</td>'+
+      '<td><button class="btn sm" data-a="ren" data-id="'+esc(r.id)+'">改名</button>'+(p.final?'<button class="btn sm" data-a="clr" data-id="'+esc(r.id)+'">清除決賽設定</button>':'')+'<button class="btn sm danger" data-a="del" data-id="'+esc(r.id)+'">刪除</button></td></tr>'}).join('')||'<tr><td colspan="7" style="color:var(--dim);padding:18px">沒有資料</td></tr>';
+  $('dbRows').querySelectorAll('button').forEach(function(b){b.onclick=function(){dbAct(b.dataset.a,b.dataset.id)}})}
+/* re-sign an edited record so Race Control still trusts it (same checksum the garage uses) */
+function dbResign(p){var b=JSON.parse(JSON.stringify(p));delete b.check;b.updatedAt=new Date().toISOString();b.check=SIM.checksum(b);return b}
+async function dbAct(a,id){var r=DBM.rows.filter(function(x){return x.id===id})[0];if(!r)return;var p=r.payload||{},nm=r.name||(p.player&&p.player.name)||id;
+  try{
+    if(a==='del'){if(!confirm('刪除「'+nm+'（'+id+'）」的所有資料？此動作無法復原。'))return;await CLOUD.admin(DBM.pin,'delete_player',{event:DBM.ev,id:id});
+      if(DBM.ev===CLOUD.event){delete S.entries[id];var i=S.selected.indexOf(id);if(i>=0)S.selected.splice(i,1);delete S.wildcard[id];save()}dbMsg('已刪除 '+nm,'ok')}
+    else{var np=JSON.parse(JSON.stringify(p)),newName=nm;
+      if(a==='ren'){newName=(prompt('新的名字：',nm)||'').trim().slice(0,16);if(!newName||newName===nm)return;np.player=Object.assign({},np.player,{name:newName})}
+      if(a==='clr'){if(!confirm('清除「'+nm+'」的決賽設定？他需要重新提交才會進排位。'))return;np.final=null}
+      np=dbResign(np);await CLOUD.admin(DBM.pin,'put',{event:DBM.ev,id:id,name:newName,payload:np});
+      if(DBM.ev===CLOUD.event){addFile(np,'cloud');save()}dbMsg(a==='ren'?'已改名為 '+newName:'已清除 '+nm+' 的決賽設定','ok')}
+    if(DBM.ev===CLOUD.event){if(cur==='live')renderLive();else $('nPlayers').textContent=Object.keys(S.entries).length}
+    await dbLoad()}catch(e){dbErr(e)}}
+$('dbDelEv').onclick=async function(){var ev=DBM.ev,t=prompt('這會刪除活動「'+ev+'」的全部 '+DBM.rows.length+' 位玩家資料與倒數設定，無法復原。\n建議先按「下載備份 JSON」。\n\n確定請輸入活動代碼 '+ev+'：');if(t!==ev){if(t!=null)dbMsg('代碼不符，未刪除','err');return}
+  try{await CLOUD.admin(DBM.pin,'delete_event',{event:ev});if(ev===CLOUD.event){S.entries={};S.selected=[];S.wildcard={};S.revealed=false;save();renderLive()}dbMsg('已刪除活動 '+ev+' 的全部資料','ok');await dbEvents();await dbLoad()}catch(e){dbErr(e)}};
+$('dbDl').onclick=function(){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({event:DBM.ev,exportedAt:new Date().toISOString(),players:DBM.rows},null,2)],{type:'application/json'}));a.download='CMPGP_備份_'+DBM.ev+'_'+new Date().toISOString().slice(0,16).replace(/[-:T]/g,'')+'.json';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);dbMsg('已下載 '+DBM.rows.length+' 位玩家的備份','ok')};
 
 /* ---------- cloud join: QR code for phones (only when this page is served over http/https) ---------- */
 function qrSvg(text){try{var q=qrcode(0,'M');q.addData(text);q.make();return q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch(e){return ''}}
